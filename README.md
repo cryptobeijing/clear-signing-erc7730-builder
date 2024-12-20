@@ -4,7 +4,7 @@ This project as to goal to build an erc7730 json for clear signing
 
 ## How It Works
 
-## pyton api
+## python api
 The Python/FastAPI server is mapped into to Next.js app under `/api/`.
 
 This is implemented using [`next.config.js` rewrites](https://github.com/digitros/nextjs-fastapi/blob/main/next.config.js) to map any request to `/api/py/:path*` to the FastAPI API, which is hosted in the `/api` folder.
