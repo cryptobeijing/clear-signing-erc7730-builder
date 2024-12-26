@@ -1,10 +1,15 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+
 from subprocess import Popen, PIPE
 from dotenv import load_dotenv
 import os
 from erc7730.generate.generate import generate_descriptor
+from erc7730.model.input.descriptor import InputERC7730Descriptor
 import os
 import traceback
+
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 etherscan_api_key = os.getenv("ETHERSCAN_API_KEY")
 env = os.environ.copy()
@@ -13,7 +18,11 @@ env["XDG_CACHE_HOME"] = '/tmp'
 
 app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 
-@app.get("/api/py/generate")
+class Message(BaseModel):
+    message: str
+
+
+@app.get("/api/py/generate", response_model=InputERC7730Descriptor, responses={400: {"model": Message}})
 def run_erc7730(address: str, chain_id: int):
     """generate the  'erc7730' based on the contract address"""
     try:
@@ -23,11 +32,12 @@ def run_erc7730(address: str, chain_id: int):
             chain_id=chain_id,
             contract_address=address,
         )
-        return {
-            "erc7730_path": result,
-        }
+        return result
     except Exception as e:
-        return {"error": str(e)}
+        error_message = str(e) 
+
+        return JSONResponse(status_code=404, content={"message": error_message})
+       
 
 @app.get("/api/py/debug")
 def debug_env():

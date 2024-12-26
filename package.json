@@ -11,6 +11,7 @@
     "fastapi-dev": "pip3 install -r requirements.txt && python3 -m uvicorn api.index:app --reload",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
+    "generate": "npx openapi-typescript http://127.0.0.1:8000/api/py/openapi.json --output ./src/server/api/routers/pythonInteraction/api-types.ts",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "preview": "next build && next start",
@@ -38,6 +39,7 @@
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "web3": "^4.16.0",
     "zod": "^3.23.3"
   },
   "devDependencies": {
@@ -49,6 +51,7 @@
     "@typescript-eslint/parser": "^8.1.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.0.1",
+    "openapi-typescript": "^7.4.4",
     "postcss": "^8.4.39",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",

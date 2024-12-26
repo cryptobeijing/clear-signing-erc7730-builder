@@ -9,37 +9,36 @@ import { Textarea } from "~/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import SampleAddressAbiCard from "./sampleAddressAbiCard";
 import { Button } from "~/components/ui/button";
-
-const fetchERC7730Metadata = async () => {
-  // In a real implementation, this function would interact with the backed
-  // and parse the actual metadata. For this example, we'll return mock data.
-  await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
-  return {
-    name: "Sample ERC7730 Token",
-    symbol: "ERC7730",
-    totalSupply: "1000000",
-    owner: "0x1234567890123456789012345678901234567890",
-  };
-};
+import { api } from "~/trpc/react";
+import { type GenerateResponse } from "~/server/api/routers/pythonInteraction/fetchGenerate";
+import { ZodError } from "zod";
 
 const CardErc7730 = () => {
   const [input, setInput] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-  const [metadata, setMetadata] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [abi, setAbi] = useState<GenerateResponse | null>(null);
   const [inputType, setInputType] = useState<"address" | "abi">("address");
+  const {
+    mutateAsync: fetchERC7730Metadata,
+    isPending: loading,
+    error,
+  } = api.pythonInteraction.generate.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      const result = await fetchERC7730Metadata();
-      setMetadata(result);
+      const { abi } = await fetchERC7730Metadata({
+        value: input,
+      });
+
+      if (abi) {
+        setAbi(abi);
+      } else {
+        setAbi(null);
+      }
     } catch (error) {
       console.error("Error fetching metadata:", error);
-      setMetadata(null);
+      setAbi(null);
     }
-    setLoading(false);
   };
 
   const onTabChange = (value: string) => {
@@ -89,14 +88,28 @@ const CardErc7730 = () => {
 
       <SampleAddressAbiCard setInput={setInput} inputType={inputType} />
 
-      {metadata && (
+      {error && (
         <Card>
           <CardHeader>
-            <CardTitle>ERC7730 Metadata</CardTitle>
+            <CardTitle>Error</CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="overflow-x-auto rounded-md bg-gray-100 p-4">
-              {JSON.stringify(metadata, null, 2)}
+            {error instanceof ZodError
+              ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                JSON.parse(error.message)[0].message
+              : error.message}
+          </CardContent>
+        </Card>
+      )}
+
+      {abi && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Abi</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <pre className="h-96 overflow-auto rounded-md bg-gray-100 p-4">
+              {JSON.stringify(abi, null, 2)}
             </pre>
           </CardContent>
         </Card>

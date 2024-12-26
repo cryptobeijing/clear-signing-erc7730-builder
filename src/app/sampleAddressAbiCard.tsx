@@ -10,8 +10,8 @@ import { Button } from "~/components/ui/button";
 
 const predefinedAddresses = [
   {
-    label: "Vitalik Buterin's Address",
-    value: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    label: "Poap",
+    value: "0x0bb4D3e88243F4A057Db77341e6916B0e449b158",
   },
   {
     label: "Ethereum Foundation",
