@@ -48,7 +48,7 @@ const CardErc7730 = () => {
   };
 
   return (
-    <div className="lg:w-[580px]">
+    <div className="w-full lg:w-[580px]">
       <form onSubmit={handleSubmit} className="mb-4 flex w-full flex-col gap-4">
         <Tabs defaultValue="address" onValueChange={onTabChange}>
           <TabsList className="grid w-full grid-cols-2">
