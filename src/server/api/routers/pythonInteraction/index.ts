@@ -29,7 +29,16 @@ const ethSchema = z.object({
 
 export const pythonInteractionRouter = createTRPCRouter({
   test: publicProcedure.query(() => {
-    return { message: "Hello from Python Interaction!" };
+    const url = new URL(
+      `https://${process.env.VERCEL_BRANCH_URL ?? "http://127.0.0.1:8000"}/api/py/generateFromAddress`,
+    );
+    url.searchParams.append(
+      "address",
+      "0x0bb4D3e88243F4A057Db77341e6916B0e449b158",
+    );
+    url.searchParams.append("chain_id", "1");
+
+    return { message: url.toString() };
   }),
   generate: publicProcedure
     .input(ethSchema)
