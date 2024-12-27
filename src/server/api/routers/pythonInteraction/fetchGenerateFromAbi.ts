@@ -15,7 +15,7 @@ export default async function fetchGenerateFromAbi(
   }
 
   const url = new URL(
-    `https://${process.env.VERCEL_URL ?? "http://127.0.0.1:8000"}/api/py/generateFromAbi`,
+    `https://${process.env.VERCEL_BRANCH_URL ?? "http://127.0.0.1:8000"}/api/py/generateFromAbi`,
   );
 
   const params = {

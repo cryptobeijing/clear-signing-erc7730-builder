@@ -1,28 +1,31 @@
 import { type paths } from "./api-types";
 
-type GenerateQueryParams =
-  paths["/api/py/generateFromAddress"]["post"]["parameters"]["query"];
+type GenerateBodyParams =
+  paths["/api/py/generateFromAddress"]["post"]["requestBody"]["content"]["application/json"];
 export type GenerateResponse =
   paths["/api/py/generateFromAddress"]["post"]["responses"]["200"]["content"]["application/json"];
 type ValidationError =
   paths["/api/py/generateFromAddress"]["post"]["responses"]["422"]["content"]["application/json"];
 
-export default async function fetchGenerateFromAddress(
-  params: GenerateQueryParams,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<any> {
-  if (!params) {
-    throw new Error("Query parameters are required.");
+export default async function fetchGenerateFromAddress({
+  address,
+  chain_id,
+}: GenerateBodyParams): Promise<GenerateResponse> {
+  if (typeof address !== "string" || typeof chain_id !== "number") {
+    throw new Error("Invalid address");
   }
+  // url.searchParams.append("address", params.address);
+  // url.searchParams.append("chain_id", params.chain_id.toString());
 
-  const url = new URL(
-    `https://${process.env.VERCEL_BRANCH_URL ?? "http://127.0.0.1:8000"}/api/py/generateFromAddress`,
-  );
-  url.searchParams.append("address", params.address);
-  url.searchParams.append("chain_id", params.chain_id.toString());
-
-  const response = await fetch(url.toString(), {
+  const response = await fetch("/api/py/generateFromAddress", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      address,
+      chain_id: chain_id.toString(),
+    }),
   });
 
   if (!response.ok) {

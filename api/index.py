@@ -25,11 +25,16 @@ app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 class Message(BaseModel):
     message: str
 
+class AddressProps(BaseModel):
+    address: str
+    chain_id: int
 
 @app.post("/api/py/generateFromAddress", response_model=InputERC7730Descriptor, responses={400: {"model": Message}})
-def run_erc7730(address: str, chain_id: int):
+def run_erc7730(params: AddressProps):
     """generate the  'erc7730' based on the contract address"""
     try:
+        address = params.address
+        chain_id = params.chain_id
         etherscan_api_key = os.getenv("ETHERSCAN_API_KEY")
         env = os.environ.copy()
         env["ETHERSCAN_API_KEY"] = etherscan_api_key

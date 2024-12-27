@@ -10,18 +10,33 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import SampleAddressAbiCard from "./sampleAddressAbiCard";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
-import { type GenerateResponse } from "~/server/api/routers/pythonInteraction/fetchGenerateFromAddress";
+import fetchGenerateFromAddress, {
+  type GenerateResponse,
+} from "~/server/api/routers/pythonInteraction/fetchGenerateFromAddress";
 import { ZodError } from "zod";
+import { useMutation } from "@tanstack/react-query";
 
 const CardErc7730 = () => {
   const [input, setInput] = useState("");
   const [abi, setAbi] = useState<GenerateResponse | null>(null);
   const [inputType, setInputType] = useState<"address" | "abi">("address");
+  // const {
+  //   mutateAsync: fetchERC7730Metadata,
+  //   isPending: loading,
+  //   error,
+  // } = api.pythonInteraction.generate.useMutation();
+
   const {
     mutateAsync: fetchERC7730Metadata,
     isPending: loading,
     error,
-  } = api.pythonInteraction.generate.useMutation();
+  } = useMutation({
+    mutationFn: (address: string) =>
+      fetchGenerateFromAddress({
+        address,
+        chain_id: 1,
+      }),
+  });
 
   const { data } = api.pythonInteraction.test.useQuery();
 
@@ -31,12 +46,10 @@ const CardErc7730 = () => {
     try {
       console.log("input", input);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const { erc7730 } = await fetchERC7730Metadata({
-        value: input,
-      });
+      const erc7730 = await fetchERC7730Metadata(input);
 
       if (erc7730) {
-        setAbi(erc7730 as GenerateResponse);
+        setAbi(erc7730);
       } else {
         setAbi(null);
       }

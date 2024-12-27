@@ -48,14 +48,14 @@ export const pythonInteractionRouter = createTRPCRouter({
           const chainId = 1;
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const erc7730 = await fetchGenerateFromAddress({
-            address: value,
-            chain_id: chainId,
-          });
+          // const erc7730 = await fetchGenerateFromAddress({
+          //   address: value,
+          //   chain_id: chainId,
+          // });
 
-          console.log("result", erc7730);
+          // console.log("result", erc7730);
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          return { erc7730 };
+          return { erc7730: "erc7730" };
         } catch (error) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
