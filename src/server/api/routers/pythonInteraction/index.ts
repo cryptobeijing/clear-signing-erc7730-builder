@@ -35,12 +35,14 @@ export const pythonInteractionRouter = createTRPCRouter({
         try {
           const chainId = 1;
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const erc7730 = await fetchGenerateFromAddress({
             address: value,
             chain_id: chainId,
           });
 
           console.log("result", erc7730);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           return { erc7730 };
         } catch (error) {
           throw new TRPCError({
