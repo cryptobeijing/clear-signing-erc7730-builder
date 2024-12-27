@@ -23,6 +23,9 @@ const CardErc7730 = () => {
     error,
   } = api.pythonInteraction.generate.useMutation();
 
+  const { data } = api.pythonInteraction.test.useQuery();
+
+  console.log("data", data);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
