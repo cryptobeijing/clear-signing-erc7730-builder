@@ -1,29 +1,27 @@
 import { type paths } from "./api-types";
 
 type GenerateQueryParams =
-  paths["/api/py/generate"]["get"]["parameters"]["query"];
+  paths["/api/py/generateFromAddress"]["post"]["parameters"]["query"];
 export type GenerateResponse =
-  paths["/api/py/generate"]["get"]["responses"]["200"]["content"]["application/json"];
+  paths["/api/py/generateFromAddress"]["post"]["responses"]["200"]["content"]["application/json"];
 type ValidationError =
-  paths["/api/py/generate"]["get"]["responses"]["422"]["content"]["application/json"];
+  paths["/api/py/generateFromAddress"]["post"]["responses"]["422"]["content"]["application/json"];
 
-export default async function fetchGenerate(
+export default async function fetchGenerateFromAddress(
   params: GenerateQueryParams,
 ): Promise<GenerateResponse> {
-  console.log("fetch generate ", params);
-
   if (!params) {
     throw new Error("Query parameters are required.");
   }
 
   const url = new URL(
-    `${process.env.VERCEL_URL ?? "http://127.0.0.1:8000"}/api/py/generate`,
+    `${process.env.VERCEL_URL ?? "http://127.0.0.1:8000"}/api/py/generateFromAddress`,
   );
   url.searchParams.append("address", params.address);
   url.searchParams.append("chain_id", params.chain_id.toString());
 
   const response = await fetch(url.toString(), {
-    method: "GET",
+    method: "POST",
   });
 
   if (!response.ok) {

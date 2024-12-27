@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import SampleAddressAbiCard from "./sampleAddressAbiCard";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
-import { type GenerateResponse } from "~/server/api/routers/pythonInteraction/fetchGenerate";
+import { type GenerateResponse } from "~/server/api/routers/pythonInteraction/fetchGenerateFromAddress";
 import { ZodError } from "zod";
 
 const CardErc7730 = () => {
@@ -26,12 +26,13 @@ const CardErc7730 = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { abi } = await fetchERC7730Metadata({
+      console.log("input", input);
+      const { erc7730 } = await fetchERC7730Metadata({
         value: input,
       });
 
-      if (abi) {
-        setAbi(abi);
+      if (erc7730) {
+        setAbi(erc7730 as GenerateResponse);
       } else {
         setAbi(null);
       }

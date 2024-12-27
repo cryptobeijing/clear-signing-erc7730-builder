@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import Web3, { type AbiFunctionFragment } from "web3";
-import fetchGenerate from "./fetchGenerate";
 import { TRPCError } from "@trpc/server";
+import fetchGenerateFromAddress from "./fetchGenerateFromAddress";
+import fetchGenerateFromAbi from "./fetchGenerateFromAbi";
 
 const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
 
@@ -11,19 +12,17 @@ const web3 = new Web3();
 const ethSchema = z.object({
   value: z.union([
     z.string().regex(ethAddressRegex, { message: "Invalid Ethereum address" }),
-    z.array(
-      z.any().refine(
-        (abi: string | AbiFunctionFragment) => {
-          try {
-            // Validate the ABI using web3.js
-            web3.eth.abi.encodeFunctionSignature(abi);
-            return true;
-          } catch {
-            return false;
-          }
-        },
-        { message: "Invalid ABI" },
-      ),
+    z.string().refine(
+      (abi) => {
+        try {
+          // Validate the ABI using web3.js
+          web3.eth.abi.encodeFunctionSignature(abi);
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      { message: "Invalid ABI" },
     ),
   ]),
 });
@@ -36,13 +35,13 @@ export const pythonInteractionRouter = createTRPCRouter({
         try {
           const chainId = 1;
 
-          const abi = await fetchGenerate({
+          const erc7730 = await fetchGenerateFromAddress({
             address: value,
             chain_id: chainId,
           });
 
-          console.log("result", abi);
-          return { abi };
+          console.log("result", erc7730);
+          return { erc7730 };
         } catch (error) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
@@ -54,12 +53,20 @@ export const pythonInteractionRouter = createTRPCRouter({
         }
       }
 
-      if (Array.isArray(value)) {
+      console.log("ici");
+      console.log(
+        "web3.eth.abi.encodeFunctionSignature(abi)",
+        web3.eth.abi.encodeFunctionSignature(value),
+      );
+      const erc7730 = await fetchGenerateFromAbi({
+        abi: JSON.stringify(value),
+      });
+
+      console.log("result", erc7730);
+      if (erc7730)
         return {
-          message:
-            "ABI validation successful. Further logic can be implemented here.",
+          erc7730,
         };
-      }
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
