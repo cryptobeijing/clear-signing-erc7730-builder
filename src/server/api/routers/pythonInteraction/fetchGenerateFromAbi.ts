@@ -18,6 +18,7 @@ export default async function fetchGenerateFromAbi(
     `${process.env.VERCEL_URL ?? "http://127.0.0.1:8000"}/api/py/generateFromAbi`,
   );
 
+  return process.env.VERCEL_URL;
   const params = {
     abi: abiString.abi, // Or remove JSON.stringify if the consumer expects an object
     // Add other required properties
