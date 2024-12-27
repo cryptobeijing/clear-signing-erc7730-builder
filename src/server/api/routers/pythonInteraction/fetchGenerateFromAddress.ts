@@ -9,7 +9,8 @@ type ValidationError =
 
 export default async function fetchGenerateFromAddress(
   params: GenerateQueryParams,
-): Promise<GenerateResponse> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any> {
   if (!params) {
     throw new Error("Query parameters are required.");
   }
@@ -20,6 +21,7 @@ export default async function fetchGenerateFromAddress(
   url.searchParams.append("address", params.address);
   url.searchParams.append("chain_id", params.chain_id.toString());
 
+  return url;
   const response = await fetch(url.toString(), {
     method: "POST",
   });
