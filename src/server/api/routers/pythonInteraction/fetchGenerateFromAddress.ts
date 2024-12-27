@@ -16,12 +16,11 @@ export default async function fetchGenerateFromAddress(
   }
 
   const url = new URL(
-    `https://${process.env.VERCEL_URL ?? "http://127.0.0.1:8000"}/api/py/generateFromAddress`,
+    `https://${process.env.VERCEL_BRANCH_URL ?? "http://127.0.0.1:8000"}/api/py/generateFromAddress`,
   );
   url.searchParams.append("address", params.address);
   url.searchParams.append("chain_id", params.chain_id.toString());
 
-  return url;
   const response = await fetch(url.toString(), {
     method: "POST",
   });
