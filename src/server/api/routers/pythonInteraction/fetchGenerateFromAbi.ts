@@ -14,11 +14,12 @@ export default async function fetchGenerateFromAbi(
     throw new Error("Query parameters are required.");
   }
 
+  return process.env.VERCEL_URL;
+
   const url = new URL(
     `${process.env.VERCEL_URL ?? "http://127.0.0.1:8000"}/api/py/generateFromAbi`,
   );
 
-  return process.env.VERCEL_URL;
   const params = {
     abi: abiString.abi, // Or remove JSON.stringify if the consumer expects an object
     // Add other required properties
