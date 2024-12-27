@@ -30,6 +30,10 @@ class Message(BaseModel):
 def run_erc7730(address: str, chain_id: int):
     """generate the  'erc7730' based on the contract address"""
     try:
+        etherscan_api_key = os.getenv("ETHERSCAN_API_KEY")
+        env = os.environ.copy()
+        env["ETHERSCAN_API_KEY"] = etherscan_api_key
+        env["XDG_CACHE_HOME"] = '/tmp'
         load_dotenv()
 
         result = generate_descriptor(
