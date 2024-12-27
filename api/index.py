@@ -19,7 +19,6 @@ env = os.environ.copy()
 env["ETHERSCAN_API_KEY"] = etherscan_api_key
 env["XDG_CACHE_HOME"] = '/tmp'
 
-load_dotenv()
 
 app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 
@@ -31,6 +30,7 @@ class Message(BaseModel):
 def run_erc7730(address: str, chain_id: int):
     """generate the  'erc7730' based on the contract address"""
     try:
+        load_dotenv()
 
         result = generate_descriptor(
             chain_id=chain_id,
