@@ -21,7 +21,6 @@ export default async function fetchGenerateFromAddress(
   url.searchParams.append("address", params.address);
   url.searchParams.append("chain_id", params.chain_id.toString());
 
-  return url;
   const response = await fetch(url.toString(), {
     method: "POST",
   });
