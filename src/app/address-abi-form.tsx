@@ -27,6 +27,7 @@ const CardErc7730 = () => {
     e.preventDefault();
     try {
       console.log("input", input);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { erc7730 } = await fetchERC7730Metadata({
         value: input,
       });
