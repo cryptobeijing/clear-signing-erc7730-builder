@@ -31,7 +31,7 @@ const config = {
       },
       {
         source: "/api/trpc/:path*",
-        destination: "/api/trpc/:path*", // Ensure this is pointing to the correct handler
+        destination: "/api/trpc/:path*",
       },
     ];
   },
