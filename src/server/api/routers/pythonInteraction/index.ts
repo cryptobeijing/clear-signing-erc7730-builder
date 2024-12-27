@@ -28,6 +28,9 @@ const ethSchema = z.object({
 });
 
 export const pythonInteractionRouter = createTRPCRouter({
+  test: publicProcedure.query(() => {
+    return { message: "Hello from Python Interaction!" };
+  }),
   generate: publicProcedure
     .input(ethSchema)
     .mutation(async ({ input: { value } }) => {
