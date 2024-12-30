@@ -9,22 +9,17 @@ import { Textarea } from "~/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import SampleAddressAbiCard from "./sampleAddressAbiCard";
 import { Button } from "~/components/ui/button";
-import { api } from "~/trpc/react";
-import fetchGenerateFromAddress, {
-  type GenerateResponse,
-} from "~/server/api/routers/pythonInteraction/fetchGenerateFromAddress";
+
 import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
+import fetchGenerateFromAddress, {
+  type GenerateResponse,
+} from "./fetchGenerateFromAddress";
 
 const CardErc7730 = () => {
   const [input, setInput] = useState("");
-  const [abi, setAbi] = useState<GenerateResponse | null>(null);
+  const [erc7730, setErc7730] = useState<GenerateResponse | null>(null);
   const [inputType, setInputType] = useState<"address" | "abi">("address");
-  // const {
-  //   mutateAsync: fetchERC7730Metadata,
-  //   isPending: loading,
-  //   error,
-  // } = api.pythonInteraction.generate.useMutation();
 
   const {
     mutateAsync: fetchERC7730Metadata,
@@ -38,24 +33,19 @@ const CardErc7730 = () => {
       }),
   });
 
-  const { data } = api.pythonInteraction.test.useQuery();
-
-  console.log("data", data);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.log("input", input);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const erc7730 = await fetchERC7730Metadata(input);
 
       if (erc7730) {
-        setAbi(erc7730);
+        setErc7730(erc7730);
       } else {
-        setAbi(null);
+        setErc7730(null);
       }
     } catch (error) {
       console.error("Error fetching metadata:", error);
-      setAbi(null);
+      setErc7730(null);
     }
   };
 
@@ -120,14 +110,14 @@ const CardErc7730 = () => {
         </Card>
       )}
 
-      {abi && (
+      {erc7730 && (
         <Card>
           <CardHeader>
-            <CardTitle>Abi</CardTitle>
+            <CardTitle>ERC7730</CardTitle>
           </CardHeader>
           <CardContent>
             <pre className="h-96 overflow-auto rounded-md bg-gray-100 p-4">
-              {JSON.stringify(abi, null, 2)}
+              {JSON.stringify(erc7730, null, 2)}
             </pre>
           </CardContent>
         </Card>

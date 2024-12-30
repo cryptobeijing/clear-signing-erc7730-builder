@@ -1,4 +1,4 @@
-import { type paths } from "./api-types";
+import { type paths } from "~/generate/api-types";
 
 type GenerateBodyParams =
   paths["/api/py/generateFromAddress"]["post"]["requestBody"]["content"]["application/json"];
@@ -7,25 +7,15 @@ export type GenerateResponse =
 type ValidationError =
   paths["/api/py/generateFromAddress"]["post"]["responses"]["422"]["content"]["application/json"];
 
-export default async function fetchGenerateFromAddress({
-  address,
-  chain_id,
-}: GenerateBodyParams): Promise<GenerateResponse> {
-  if (typeof address !== "string" || typeof chain_id !== "number") {
-    throw new Error("Invalid address");
-  }
-  // url.searchParams.append("address", params.address);
-  // url.searchParams.append("chain_id", params.chain_id.toString());
-
+export default async function fetchGenerateFromAddress(
+  body: GenerateBodyParams,
+): Promise<GenerateResponse> {
   const response = await fetch("/api/py/generateFromAddress", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      address,
-      chain_id: chain_id.toString(),
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {

@@ -1,4 +1,4 @@
-import { type paths } from "./api-types";
+import { type paths } from "~/generate/api-types";
 
 type GenerateBody =
   paths["/api/py/generateFromAbi"]["post"]["requestBody"]["content"]["application/json"];
@@ -14,16 +14,11 @@ export default async function fetchGenerateFromAbi(
     throw new Error("Query parameters are required.");
   }
 
-  const url = new URL(
-    `https://${process.env.VERCEL_BRANCH_URL ?? "http://127.0.0.1:8000"}/api/py/generateFromAbi`,
-  );
-
   const params = {
-    abi: abiString.abi, // Or remove JSON.stringify if the consumer expects an object
-    // Add other required properties
+    abi: abiString.abi,
   };
 
-  const response = await fetch(url.toString(), {
+  const response = await fetch("/api/py/generateFromAbi", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
