@@ -111,12 +111,12 @@ const CardErc7730 = () => {
       )}
 
       {erc7730 && (
-        <Card>
+        <Card className="w-full p-4">
           <CardHeader>
             <CardTitle>ERC7730</CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="h-96 overflow-auto rounded-md bg-gray-100 p-4">
+            <pre className="h-96 w-80 overflow-scroll rounded-md bg-gray-100 lg:w-auto">
               {JSON.stringify(erc7730, null, 2)}
             </pre>
           </CardContent>
