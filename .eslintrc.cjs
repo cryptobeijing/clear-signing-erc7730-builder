@@ -28,7 +28,9 @@ const config = {
         "argsIgnorePattern": "^_"
       }
     ],
+    "@typescript-eslint/consistent-indexed-object-style": "off",
     "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/no-redundant-type-constituents": "off",
     "@typescript-eslint/no-misused-promises": [
       "error",
       {

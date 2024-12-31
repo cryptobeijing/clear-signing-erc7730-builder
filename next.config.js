@@ -29,6 +29,10 @@ const config = {
             ? "http://127.0.0.1:8000/api/py/openapi.json"
             : "/api/py/openapi.json",
       },
+      {
+        source: "/api/trpc/:path*",
+        destination: "/api/trpc/:path*",
+      },
     ];
   },
 };

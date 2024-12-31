@@ -10,36 +10,43 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import SampleAddressAbiCard from "./sampleAddressAbiCard";
 import { Button } from "~/components/ui/button";
 
-const fetchERC7730Metadata = async () => {
-  // In a real implementation, this function would interact with the backed
-  // and parse the actual metadata. For this example, we'll return mock data.
-  await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
-  return {
-    name: "Sample ERC7730 Token",
-    symbol: "ERC7730",
-    totalSupply: "1000000",
-    owner: "0x1234567890123456789012345678901234567890",
-  };
-};
+import { ZodError } from "zod";
+import { useMutation } from "@tanstack/react-query";
+import fetchGenerateFromAddress, {
+  type GenerateResponse,
+} from "./fetchGenerateFromAddress";
 
 const CardErc7730 = () => {
   const [input, setInput] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-  const [metadata, setMetadata] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [erc7730, setErc7730] = useState<GenerateResponse | null>(null);
   const [inputType, setInputType] = useState<"address" | "abi">("address");
+
+  const {
+    mutateAsync: fetchERC7730Metadata,
+    isPending: loading,
+    error,
+  } = useMutation({
+    mutationFn: (address: string) =>
+      fetchGenerateFromAddress({
+        address,
+        chain_id: 1,
+      }),
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      const result = await fetchERC7730Metadata();
-      setMetadata(result);
+      const erc7730 = await fetchERC7730Metadata(input);
+
+      if (erc7730) {
+        setErc7730(erc7730);
+      } else {
+        setErc7730(null);
+      }
     } catch (error) {
       console.error("Error fetching metadata:", error);
-      setMetadata(null);
+      setErc7730(null);
     }
-    setLoading(false);
   };
 
   const onTabChange = (value: string) => {
@@ -89,14 +96,28 @@ const CardErc7730 = () => {
 
       <SampleAddressAbiCard setInput={setInput} inputType={inputType} />
 
-      {metadata && (
+      {error && (
         <Card>
           <CardHeader>
-            <CardTitle>ERC7730 Metadata</CardTitle>
+            <CardTitle>Error</CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="overflow-x-auto rounded-md bg-gray-100 p-4">
-              {JSON.stringify(metadata, null, 2)}
+            {error instanceof ZodError
+              ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                JSON.parse(error.message)[0].message
+              : error.message}
+          </CardContent>
+        </Card>
+      )}
+
+      {erc7730 && (
+        <Card className="w-full p-4">
+          <CardHeader>
+            <CardTitle>ERC7730</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <pre className="h-96 w-80 overflow-scroll rounded-md bg-gray-100 lg:w-auto">
+              {JSON.stringify(erc7730, null, 2)}
             </pre>
           </CardContent>
         </Card>
