@@ -12,14 +12,15 @@ import { Button } from "~/components/ui/button";
 
 import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import fetchGenerateFromAddress, {
-  type GenerateResponse,
-} from "./fetchGenerateFromAddress";
+import fetchGenerateFromAddress from "./fetchGenerateFromAddress";
+import useErc7730Store from "~/store/erc7730";
+import { useRouter } from "next/navigation";
 
 const CardErc7730 = () => {
   const [input, setInput] = useState("");
-  const [erc7730, setErc7730] = useState<GenerateResponse | null>(null);
   const [inputType, setInputType] = useState<"address" | "abi">("address");
+  const { setErc7730 } = useErc7730Store();
+  const router = useRouter();
 
   const {
     mutateAsync: fetchERC7730Metadata,
@@ -40,12 +41,10 @@ const CardErc7730 = () => {
 
       if (erc7730) {
         setErc7730(erc7730);
-      } else {
-        setErc7730(null);
+        router.push("/metadata");
       }
     } catch (error) {
       console.error("Error fetching metadata:", error);
-      setErc7730(null);
     }
   };
 
@@ -106,19 +105,6 @@ const CardErc7730 = () => {
               ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 JSON.parse(error.message)[0].message
               : error.message}
-          </CardContent>
-        </Card>
-      )}
-
-      {erc7730 && (
-        <Card className="w-full p-4">
-          <CardHeader>
-            <CardTitle>ERC7730</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="h-96 w-80 overflow-scroll rounded-md bg-gray-100 lg:w-auto">
-              {JSON.stringify(erc7730, null, 2)}
-            </pre>
           </CardContent>
         </Card>
       )}
