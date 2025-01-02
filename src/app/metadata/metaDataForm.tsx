@@ -21,7 +21,6 @@ import Devices from "./devices";
 import {
   Drawer,
   DrawerContent,
-  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -46,8 +45,7 @@ type MetadataFormType = z.infer<typeof metaDataSchema>;
 
 const MetadataForm = () => {
   const router = useRouter();
-  const { getMetadata, setMetadata, erc7730, getContractAddress } =
-    useErc7730Store();
+  const { getMetadata, setMetadata, getContractAddress } = useErc7730Store();
   const metadata = getMetadata();
 
   const address = getContractAddress();
