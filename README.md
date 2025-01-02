@@ -2,7 +2,7 @@
 
 This project as to goal to build an erc7730 json for clear signing
 
-## How It Works
+# How It Works
 
 ## python api
 The Python/FastAPI server is mapped into to Next.js app under `/api/`.
