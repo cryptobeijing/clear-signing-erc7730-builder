@@ -72,7 +72,6 @@ const MetadataForm = () => {
   });
 
   useEffect(() => {
-    console.log("metadata", erc7730);
     if (metadata === null) {
       router.push("/");
     }
