@@ -28,16 +28,13 @@ import { Erc7730StoreContext, useErc7730Store } from "~/store/erc7730Provider";
 
 const metaDataSchema = z.object({
   owner: z.string().min(1, {
-    message:
-      "Please enter a description that will represent your ERC-7730 schema",
+    message: "Owner is required. Please enter the owner's name.",
   }),
   url: z.string().min(1, {
-    message:
-      "Please enter a description that will represent your ERC-7730 schema",
+    message: "URL is required. Please enter a valid URL.",
   }),
   legalName: z.string().min(1, {
-    message:
-      "Please enter a description that will represent your ERC-7730 schema",
+    message: "Legal name is required. Please enter the legal name.",
   }),
 });
 
