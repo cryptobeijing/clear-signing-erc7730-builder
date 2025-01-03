@@ -95,12 +95,9 @@ const MetadataForm = () => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="min-w-72 space-y-2"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
         {metadata && (
-          <div className="hidden flex-row gap-2 lg:flex">
+          <div className="hidden flex-row justify-between lg:flex">
             <Devices metadata={metadata} address={address} />
           </div>
         )}
