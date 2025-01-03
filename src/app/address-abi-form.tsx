@@ -13,13 +13,13 @@ import { Button } from "~/components/ui/button";
 import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import fetchGenerateFromAddress from "./fetchGenerateFromAddress";
-import useErc7730Store from "~/store/erc7730";
 import { useRouter } from "next/navigation";
+import { useErc7730Store } from "~/store/erc7730Provider";
 
 const CardErc7730 = () => {
   const [input, setInput] = useState("");
   const [inputType, setInputType] = useState<"address" | "abi">("address");
-  const { setErc7730 } = useErc7730Store();
+  const { setErc7730 } = useErc7730Store((state) => state);
   const router = useRouter();
 
   const {

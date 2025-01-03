@@ -8,11 +8,14 @@ import {
 
 import { Wrench } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import useErc7730Store from "~/store/erc7730";
+import { Erc7730StoreContext, useErc7730Store } from "~/store/erc7730Provider";
+import { useContext } from "react";
 
 const ToolBox = () => {
+  const clearStorage = useContext(Erc7730StoreContext)?.persist;
+
   const reset = () => {
-    useErc7730Store.persist.clearStorage();
+    clearStorage?.clearStorage();
     window.location.reload();
   };
 

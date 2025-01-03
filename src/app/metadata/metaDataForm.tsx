@@ -1,10 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import useErc7730Store from "~/store/erc7730";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -25,6 +24,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "~/components/ui/drawer";
+import { Erc7730StoreContext, useErc7730Store } from "~/store/erc7730Provider";
 
 const metaDataSchema = z.object({
   owner: z.string().min(1, {
@@ -45,14 +45,17 @@ type MetadataFormType = z.infer<typeof metaDataSchema>;
 
 const MetadataForm = () => {
   const router = useRouter();
-  const { getMetadata, setMetadata, getContractAddress } = useErc7730Store();
-  const metadata = getMetadata();
+  const hasHydrated = useContext(Erc7730StoreContext)?.persist?.hasHydrated();
 
+  const { getMetadata, setMetadata, getContractAddress } = useErc7730Store(
+    (s) => s,
+  );
+  const metadata = getMetadata();
   const address = getContractAddress();
 
   const form = useForm<MetadataFormType>({
     resolver: zodResolver(metaDataSchema),
-    defaultValues: {
+    values: {
       owner: metadata?.owner ?? "",
       url: metadata?.info?.url ?? "",
       legalName: metadata?.info?.legalName ?? "",
@@ -60,6 +63,7 @@ const MetadataForm = () => {
   });
 
   form.watch((value) => {
+    if (hasHydrated === false) return;
     setMetadata({
       owner: value.owner,
       info: {
@@ -70,13 +74,12 @@ const MetadataForm = () => {
   });
 
   useEffect(() => {
-    if (metadata === null) {
+    if (hasHydrated && metadata === null) {
       router.push("/");
     }
-  }, [metadata, router]);
+  }, [metadata, router, hasHydrated, form]);
 
   const onSubmit = (data: MetadataFormType) => {
-    console.log("data", data);
     setMetadata({
       owner: data.owner,
       info: {
@@ -86,7 +89,7 @@ const MetadataForm = () => {
     });
   };
 
-  if (!useErc7730Store.persist.hasHydrated()) {
+  if (hasHydrated !== true) {
     return <div>Loading...</div>;
   }
 
@@ -96,6 +99,12 @@ const MetadataForm = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="min-w-72 space-y-2"
       >
+        {metadata && (
+          <div className="hidden flex-row gap-2 lg:flex">
+            <Devices metadata={metadata} address={address} />
+          </div>
+        )}
+
         <FormField
           control={form.control}
           name="owner"
@@ -110,12 +119,6 @@ const MetadataForm = () => {
             </FormItem>
           )}
         />
-
-        {metadata && (
-          <div className="hidden flex-row gap-2 lg:flex">
-            <Devices metadata={metadata} address={address} />
-          </div>
-        )}
 
         <FormField
           control={form.control}
