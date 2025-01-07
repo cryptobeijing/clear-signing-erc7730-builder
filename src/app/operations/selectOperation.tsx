@@ -15,9 +15,8 @@ import { useErc7730Store } from "~/store/erc7730Provider";
 import useOperationStore from "~/store/useOperationStore";
 
 const SelectOperation = () => {
-  const getOperation = useErc7730Store((s) => s.getOperations);
+  const operation = useErc7730Store((s) => s.getOperations)();
   const { selectedOperation, setSelectedOperation } = useOperationStore();
-  const Operation = getOperation();
 
   useEffect(() => {
     void useOperationStore.persist.rehydrate();
@@ -36,11 +35,11 @@ const SelectOperation = () => {
         <SelectContent className="w-full lg:w-auto">
           <SelectGroup>
             <SelectLabel>Operation</SelectLabel>
-            {Operation?.formats &&
-              Object.entries(Operation.formats).map(([OperationName]) => (
-                <SelectItem value={OperationName} key={OperationName}>
-                  <div key={OperationName}>
-                    <h3>{OperationName}</h3>
+            {operation?.formats &&
+              Object.entries(operation.formats).map(([operationName]) => (
+                <SelectItem value={operationName} key={operationName}>
+                  <div key={operationName}>
+                    <h3>{operationName}</h3>
                   </div>
                 </SelectItem>
               ))}
