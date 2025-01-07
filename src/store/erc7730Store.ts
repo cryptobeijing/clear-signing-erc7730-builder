@@ -1,5 +1,5 @@
 import { createStore } from "zustand/vanilla";
-import { Operation, type Erc7730 } from "./types";
+import { type Operation, type Erc7730 } from "./types";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface Erc7730Store {

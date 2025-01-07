@@ -57,7 +57,7 @@ const EditOperation = () => {
     console.log(values);
   }
 
-  form.watch((value, toto) => {
+  form.watch((value) => {
     if (!operationToEdit) return null;
 
     const fields = operationToEdit.fields.map((f, index) => {
