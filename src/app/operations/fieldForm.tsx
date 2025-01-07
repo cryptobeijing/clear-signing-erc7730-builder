@@ -37,7 +37,7 @@ const FieldForm = ({ field, form, index }: Props) => {
         />
       </div>
       <Collapsible open={form.watch(`field.${index}.isIncluded`)}>
-        <CollapsibleContent className="data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down overflow-hidden">
+        <CollapsibleContent>
           <FormField
             control={form.control}
             name={`field.${index}.label`}
