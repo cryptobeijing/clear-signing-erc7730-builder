@@ -3,7 +3,6 @@ import { type OperationFormType } from "./editOperation";
 import { type Operation } from "~/store/types";
 
 import OperationScreens from "./operationScreens";
-import { useErc7730Store } from "~/store/erc7730Provider";
 import FieldForm from "./fieldForm";
 
 interface Props {
@@ -12,9 +11,7 @@ interface Props {
 }
 
 const OperationFields = ({ form, operationToEdit }: Props) => {
-  const context = useErc7730Store((s) => s.getContext)();
-
-  if (!operationToEdit || !context) return null;
+  if (!operationToEdit) return null;
 
   return (
     <div className="grid grid-cols-2 gap-2">
