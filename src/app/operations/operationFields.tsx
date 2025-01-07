@@ -1,6 +1,6 @@
 import { type UseFormReturn } from "react-hook-form";
 import { type OperationFormType } from "./editOperation";
-import { Erc7730, type Operation } from "~/store/types";
+import { type Operation } from "~/store/types";
 
 import OperationScreens from "./operationScreens";
 import { useErc7730Store } from "~/store/erc7730Provider";
