@@ -84,6 +84,7 @@ const MetadataForm = () => {
         url: data.url,
       },
     });
+    router.push("/operations");
   };
 
   if (hasHydrated !== true) {
