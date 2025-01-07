@@ -12,8 +12,6 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Device } from "~/components/devices/device";
-import OperationInformation from "./operationInformation";
 import OperationScreens from "./operationScreens";
 
 interface Props {
