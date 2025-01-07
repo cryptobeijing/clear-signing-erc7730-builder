@@ -1,5 +1,6 @@
 import { Device } from "~/components/devices/device";
 import { ReviewScreen } from "~/components/devices/reviewScreen";
+import matchFieldFormatToMockData from "~/lib/matchFormatToMockData";
 import { type Operation } from "~/store/types";
 
 export interface DisplayItem {
@@ -24,10 +25,14 @@ const getScreensForOperation = (operation: Operation) => {
       displayItem && "label" in displayItem ? displayItem.label : undefined;
 
     if (label === undefined || label === null || label === "") continue;
+    if (!displayItem) continue;
 
     screen.push({
       label,
-      displayValue: "display value",
+      displayValue:
+        "format" in displayItem
+          ? matchFieldFormatToMockData(displayItem?.format ?? "")
+          : "displayValue",
     });
 
     if (screen.length === itemsPerScreen || isLastItem) {

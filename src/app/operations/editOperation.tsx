@@ -26,6 +26,7 @@ const EditOperation = () => {
   const { selectedOperation } = useOperationStore();
   const getOperationsByName = useErc7730Store((s) => s.getOperationsByName);
   const setOperationData = useErc7730Store((s) => s.setOperationData);
+  const data = useErc7730Store((s) => s.erc7730);
 
   const operationToEdit = getOperationsByName(selectedOperation ?? "");
 
@@ -55,6 +56,7 @@ const EditOperation = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    console.log(data);
   }
 
   form.watch((value) => {
