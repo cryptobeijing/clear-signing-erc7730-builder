@@ -24,7 +24,6 @@ export type OperationFormType = z.infer<typeof OperationFormSchema>;
 
 const EditOperation = () => {
   const { selectedOperation } = useOperationStore();
-  console.log(useErc7730Store((s) => s.erc7730));
   const getOperationsByName = useErc7730Store((s) => s.getOperationsByName);
   const setOperationData = useErc7730Store((s) => s.setOperationData);
 
@@ -33,7 +32,10 @@ const EditOperation = () => {
   const form = useForm<OperationFormType>({
     resolver: zodResolver(OperationFormSchema),
     values: {
-      intent: operationToEdit?.$id ?? "",
+      intent:
+        typeof operationToEdit?.intent === "string"
+          ? operationToEdit.intent
+          : "",
       field:
         operationToEdit?.fields?.map((field) => {
           const label = "label" in field ? (field.label ?? "") : "";
@@ -56,7 +58,6 @@ const EditOperation = () => {
   }
 
   form.watch((value, toto) => {
-    console.log("toto", toto);
     if (!operationToEdit) return null;
 
     const fields = operationToEdit.fields.map((f, index) => {

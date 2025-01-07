@@ -55,8 +55,10 @@ export const createErc7730Store = () => {
         getMetadata: () => get().erc7730?.metadata ?? null,
         getOperationsMetadata: (name) => {
           const formats = get().erc7730?.display?.formats ?? {};
+          const intent = formats[name]?.intent;
+
           return {
-            operationName: formats[name]?.$id ?? "",
+            operationName: typeof intent === "string" ? intent : "",
             metadata: get().erc7730?.metadata ?? null,
           };
         },
