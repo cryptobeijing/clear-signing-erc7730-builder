@@ -9,13 +9,13 @@ import OperationInformation from "./operationInformation";
 import OperationFields from "./operationFields";
 
 const OperationFormSchema = z.object({
-  $id: z.string().min(1, {
-    message: "id is required. Please enter the id.",
+  intent: z.string().min(1, {
+    message: "Please enter the intent of the operation.",
   }),
   field: z.array(
     z.object({
       label: z.string(),
-      // isIncluded: z.boolean(),
+      isIncluded: z.boolean(),
     }),
   ),
 });
@@ -24,6 +24,7 @@ export type OperationFormType = z.infer<typeof OperationFormSchema>;
 
 const EditOperation = () => {
   const { selectedOperation } = useOperationStore();
+  console.log(useErc7730Store((s) => s.erc7730));
   const getOperationsByName = useErc7730Store((s) => s.getOperationsByName);
   const setOperationData = useErc7730Store((s) => s.setOperationData);
 
@@ -32,12 +33,14 @@ const EditOperation = () => {
   const form = useForm<OperationFormType>({
     resolver: zodResolver(OperationFormSchema),
     values: {
-      $id: operationToEdit?.$id ?? "",
+      intent: operationToEdit?.$id ?? "",
       field:
         operationToEdit?.fields?.map((field) => {
+          const label = "label" in field ? (field.label ?? "") : "";
           const fieldObject = {
             ...field,
-            label: "label" in field ? (field.label ?? "") : "",
+            label,
+            isIncluded: !!label,
           };
           return fieldObject;
         }) ?? [],
@@ -52,13 +55,25 @@ const EditOperation = () => {
     console.log(values);
   }
 
-  form.watch((value) => {
+  form.watch((value, toto) => {
+    console.log("toto", toto);
     if (!operationToEdit) return null;
+
+    const fields = operationToEdit.fields.map((f, index) => {
+      const field = value?.field?.[index];
+
+      if (field?.isIncluded === false) field.label = "";
+
+      return {
+        ...f,
+        ...field,
+      };
+    });
 
     return setOperationData(selectedOperation, {
       ...operationToEdit,
-      $id: value.$id,
-      fields: operationToEdit.fields ?? [],
+      intent: value.intent,
+      fields,
     });
   });
 

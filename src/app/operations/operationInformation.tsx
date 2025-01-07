@@ -7,7 +7,6 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import Devices from "./devices";
 import { type UseFormReturn } from "react-hook-form";
 import { type OperationFormType } from "./editOperation";
 import { Device } from "~/components/devices/device";
@@ -30,12 +29,12 @@ const OperationInformation = ({ form, selectedOperation }: Props) => {
       <Card className="h-fit p-4">
         <FormField
           control={form.control}
-          name="$id"
+          name="intent"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Operation name</FormLabel>
               <FormControl>
-                <Input placeholder="$id" {...field} />
+                <Input placeholder="intent" {...field} />
               </FormControl>
               <FormDescription>
                 This is the name of the transaction Operation.

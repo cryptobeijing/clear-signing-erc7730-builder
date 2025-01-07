@@ -23,7 +23,7 @@ const getScreensForOperation = (operation: Operation) => {
     const label =
       displayItem && "label" in displayItem ? displayItem.label : undefined;
 
-    if (label === undefined || label === null) continue;
+    if (label === undefined || label === null || label === "") continue;
 
     screen.push({
       label,
@@ -45,7 +45,7 @@ interface Props {
 
 const OperationScreens = ({ operation }: Props) => {
   const screens = getScreensForOperation(operation);
-  const totalPages = screens.length;
+  const totalPages = screens.length + 1;
 
   return (
     <div className="flex flex-col gap-4">

@@ -15,6 +15,7 @@ export interface Erc7730Store {
   };
   getOperationsByName: (name: string) => Operation | null;
   setOperationData: (name: string, OperationData: Operation) => void;
+  getContext: () => Erc7730["context"] | null;
 }
 
 export const createErc7730Store = () => {
@@ -66,6 +67,7 @@ export const createErc7730Store = () => {
               metadata,
             },
           })),
+        getContext: () => get().erc7730?.context ?? null,
       }),
       {
         storage: createJSONStorage(() => sessionStorage),
