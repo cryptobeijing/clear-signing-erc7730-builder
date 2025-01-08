@@ -1,6 +1,6 @@
 import { HydrateClient } from "~/trpc/server";
 import ToolBox from "~/components/utils/toolBox";
-import FunctionsManagement from "./operationManagement";
+import OperationManagement from "./operationManagement";
 import { BreadcrumbInfo } from "./breadCrum";
 
 export default async function Functions() {
@@ -13,7 +13,7 @@ export default async function Functions() {
         </div>
         <BreadcrumbInfo />
         <div className="py-4">
-          <FunctionsManagement />
+          <OperationManagement />
         </div>
       </div>
     </HydrateClient>
