@@ -3,6 +3,7 @@ import { ReviewScreen } from "~/components/devices/reviewScreen";
 import matchFieldFormatToMockData from "~/lib/matchFormatToMockData";
 import { type Operation } from "~/store/types";
 
+const ITEM_PER_SCREEN = 4;
 export interface DisplayItem {
   label: string;
   displayValue: string;
@@ -11,8 +12,13 @@ export interface DisplayItem {
 export type Screen = DisplayItem[];
 
 const getScreensForOperation = (operation: Operation) => {
-  const displays = operation.fields;
-  const itemsPerScreen = 4;
+  const displays = operation.fields.filter((field) => {
+    const label = field && "label" in field ? field.label : undefined;
+
+    return !(label === undefined || label === null || label === "");
+  });
+
+  const itemsPerScreen = ITEM_PER_SCREEN;
 
   const screens: Screen[] = [];
   let screen: DisplayItem[] = [];
