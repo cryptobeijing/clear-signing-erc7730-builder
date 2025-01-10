@@ -7,7 +7,7 @@ import {
   type ReactNode,
   useEffect,
 } from "react";
-import createStore, { type Erc7730Store } from "./erc7730";
+import createStore, { type Erc7730Store } from "./erc7730Store";
 import { useStore } from "zustand";
 
 export type Erc7730StoreApi = ReturnType<typeof createStore>;
