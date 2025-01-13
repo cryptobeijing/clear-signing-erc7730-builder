@@ -43,7 +43,6 @@ const FieldForm = ({ field, form, index }: Props) => {
             name={`field.${index}.label`}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Operation name</FormLabel>
                 <FormControl>
                   <Input placeholder="" {...field} />
                 </FormControl>
