@@ -69,7 +69,7 @@ const OperationCarousel = () => {
         <CarouselNext />
       </Carousel>
       <div className="mx-auto flex flex-row items-center gap-4 p-2">
-        {fullOperationScreens.map((screen, index) => (
+        {fullOperationScreens.map((_, index) => (
           <div
             key={"carrousel-thumbnail-" + index}
             className={cn("w-fit rounded p-1 ring-primary hover:ring-2", {
