@@ -11,7 +11,7 @@ export interface DisplayItem {
 
 export type Screen = DisplayItem[];
 
-const getScreensForOperation = (operation: Operation) => {
+export const getScreensForOperation = (operation: Operation) => {
   const displays = operation.fields.filter((field) => {
     const label = field && "label" in field ? field.label : undefined;
 
@@ -58,16 +58,12 @@ const OperationScreens = ({ operation }: Props) => {
   const screens = getScreensForOperation(operation);
   const totalPages = screens.length + 1;
 
-  return (
-    <div className="flex flex-col gap-4">
-      {screens.map((screen, index) => (
-        <Device.Frame key={`review-screen-${index}`}>
-          <ReviewScreen screen={screen} />
-          <Device.Pagination current={index + 2} total={totalPages} />
-        </Device.Frame>
-      ))}
-    </div>
-  );
+  return screens.map((screen, index) => (
+    <Device.Frame key={`review-screen-${index}`}>
+      <ReviewScreen screen={screen} />
+      <Device.Pagination current={index + 2} total={totalPages} />
+    </Device.Frame>
+  ));
 };
 
 export default OperationScreens;

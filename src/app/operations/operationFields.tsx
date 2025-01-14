@@ -20,7 +20,9 @@ const OperationFields = ({ form, operationToEdit }: Props) => {
           <FieldForm key={field.path} field={field} form={form} index={index} />
         ))}
       </div>
-      <OperationScreens operation={operationToEdit} />
+      <div className="flex flex-col gap-4">
+        <OperationScreens operation={operationToEdit} />
+      </div>
     </div>
   );
 };

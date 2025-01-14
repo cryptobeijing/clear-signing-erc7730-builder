@@ -9,9 +9,25 @@ import { cn } from "~/lib/utils";
 // Number of lines for tags & values: 9
 
 export const Flex = {
-  Bezel: ({ children }: { children: ReactNode }) => (
-    <div className="h-[416.5px] w-[301.5px] bg-[url(/assets/DeviceBezel-Flex.png)] bg-contain p-[29.5px]">
-      <div className="flex h-[300px] w-[240px] overflow-hidden rounded-[8px]">
+  Bezel: ({
+    children,
+    size,
+  }: {
+    children: ReactNode;
+    size: "small" | "normal";
+  }) => (
+    <div
+      className={cn(
+        "h-[416.5px] w-[301.5px] bg-[url(/assets/DeviceBezel-Flex.png)] bg-contain bg-no-repeat p-[29.5px]",
+        size === "small" && "h-[41.6px] w-[30.1px] p-0",
+      )}
+    >
+      <div
+        className={cn(
+          "flex h-[300px] w-[240px] overflow-hidden rounded-[8px]",
+          size === "small" && "flex h-full w-full items-center",
+        )}
+      >
         {children}
       </div>
     </div>
