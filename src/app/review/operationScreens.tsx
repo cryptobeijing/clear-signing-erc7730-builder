@@ -6,7 +6,7 @@ import { Device } from "~/components/devices/device";
 import { ReviewScreen } from "~/components/devices/reviewScreen";
 import { TitleScreen } from "~/components/devices/titleScreen";
 import { SignScreen } from "~/components/devices/signScreen";
-import { type Screen } from "~/app/operations/operationScreens";
+import { type Screen } from "~/shared/getScreensForOperation";
 import { type Erc7730 } from "~/store/types";
 const operationScreens = (
   screens: Screen[],

@@ -1,7 +1,7 @@
 import { HydrateClient } from "~/trpc/server";
 import { BreadcrumbInfo } from "./breadCrumb";
 import OperationCarousel from "./operationCarousel";
-import SelectOperation from "~/components/shared/selectOperation";
+import SelectOperation from "~/shared/selectOperation";
 import BackToEdit from "./backToEdit";
 
 export default async function Home() {

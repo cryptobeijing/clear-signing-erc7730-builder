@@ -14,7 +14,7 @@ import {
 import { cn } from "~/lib/utils";
 import useOperationStore from "~/store/useOperationStore";
 import { useErc7730Store } from "~/store/erc7730Provider";
-import { getScreensForOperation } from "../operations/operationScreens";
+import { getScreensForOperation } from "~/shared/getScreensForOperation";
 import { Device } from "~/components/devices/device";
 import operationScreens from "./operationScreens";
 

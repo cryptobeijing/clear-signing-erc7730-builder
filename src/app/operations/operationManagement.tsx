@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { Erc7730StoreContext, useErc7730Store } from "~/store/erc7730Provider";
-import SelectOperation from "~/components/shared/selectOperation";
+import SelectOperation from "~/shared/selectOperation";
 import EditOperation from "./editOperation";
 
 const OperationsManagement = () => {
