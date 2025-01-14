@@ -27,8 +27,6 @@ const OperationCarousel = () => {
     selectedOperation,
   );
 
-  const data = useErc7730Store((s) => s.erc7730);
-  console.log("data", data);
   const operationMetadata = useErc7730Store((s) => s.getOperationsMetadata)(
     selectedOperation,
   );
@@ -47,8 +45,6 @@ const OperationCarousel = () => {
   }, [api]);
 
   if (!operation || !operationMetadata) return null;
-
-  console.log("operation", operation);
 
   if (operation.intent === "" || operation.intent === null) {
     return <div>Transaction is not clear sign</div>;
