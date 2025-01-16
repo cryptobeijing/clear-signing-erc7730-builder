@@ -7,6 +7,7 @@ import { Form } from "~/components/ui/form";
 import { Button } from "~/components/ui/button";
 import OperationInformation from "./operationInformation";
 import OperationFields from "./operationFields";
+import { useRouter } from "next/navigation";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -26,7 +27,7 @@ const EditOperation = () => {
   const { selectedOperation } = useOperationStore();
   const getOperationsByName = useErc7730Store((s) => s.getOperationsByName);
   const setOperationData = useErc7730Store((s) => s.setOperationData);
-  const data = useErc7730Store((s) => s.erc7730);
+  const router = useRouter();
 
   const operationToEdit = getOperationsByName(selectedOperation ?? "");
 
@@ -52,11 +53,8 @@ const EditOperation = () => {
 
   if (!selectedOperation) return null;
 
-  function onSubmit(values: OperationFormType) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    console.log(data);
+  function onSubmit() {
+    router.push("/review");
   }
 
   form.watch((value) => {

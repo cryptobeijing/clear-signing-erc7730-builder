@@ -47,9 +47,9 @@ const OperationInformation = ({ form, selectedOperation }: Props) => {
       <div>
         <Device.Frame>
           <TitleScreen
-            functionName={data.operationName ?? "{functionName}"}
+            functionName={data?.operationName ?? "{functionName}"}
             type={"transaction"}
-            owner={data.metadata?.owner ?? ""}
+            owner={data?.metadata?.owner ?? ""}
           />
           <Device.Pagination current={1} total={1} />
         </Device.Frame>

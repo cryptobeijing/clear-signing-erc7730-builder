@@ -9,11 +9,11 @@ export interface Erc7730Store {
   getContractAddress: () => string | null;
   setMetadata: (metadata: Erc7730["metadata"]) => void;
   getOperations: () => Erc7730["display"] | null;
-  getOperationsMetadata: (name: string) => {
+  getOperationsMetadata: (name: string | null) => {
     operationName: string;
     metadata: Erc7730["metadata"] | null;
-  };
-  getOperationsByName: (name: string) => Operation | null;
+  } | null;
+  getOperationsByName: (name: string | null) => Operation | null;
   setOperationData: (name: string, OperationData: Operation) => void;
 }
 
@@ -22,7 +22,8 @@ export const createErc7730Store = () => {
     persist(
       (set, get) => ({
         erc7730: null,
-        getOperationsByName: (name: string) => {
+        getOperationsByName: (name) => {
+          if (!name) return null;
           const formats = get().erc7730?.display?.formats ?? {};
           return formats[name] ?? null;
         },
@@ -53,6 +54,7 @@ export const createErc7730Store = () => {
         getOperations: () => get().erc7730?.display ?? null,
         getMetadata: () => get().erc7730?.metadata ?? null,
         getOperationsMetadata: (name) => {
+          if (!name) return null;
           const formats = get().erc7730?.display?.formats ?? {};
           const intent = formats[name]?.intent;
 

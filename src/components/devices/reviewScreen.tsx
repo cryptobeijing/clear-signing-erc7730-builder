@@ -1,6 +1,6 @@
 import { cn } from "~/lib/utils";
 import { Device } from "./device";
-import { type DisplayItem } from "~/app/operations/operationScreens";
+import { type DisplayItem } from "~/shared/getScreensForOperation";
 
 export const ReviewScreen = ({ screen }: { screen: DisplayItem[] }) => {
   const isStax = true;

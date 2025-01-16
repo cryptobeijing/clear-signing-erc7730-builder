@@ -37,13 +37,24 @@ export const Device = {
       </div>
     );
   },
-  Frame: ({ children }: { children: ReactNode }) => {
+  Frame: ({
+    children,
+    size = "normal",
+  }: {
+    children: ReactNode;
+    size?: "small" | "normal";
+  }) => {
     const isStax = false;
     const Component = isStax ? Stax : Flex;
 
     return (
-      <Component.Bezel>
-        <div className="flex w-full flex-col justify-between text-black antialiased">
+      <Component.Bezel size={size}>
+        <div
+          className={cn(
+            "flex w-full flex-col justify-between text-black antialiased",
+            size === "small" && "items-center",
+          )}
+        >
           {children}
         </div>
       </Component.Bezel>
