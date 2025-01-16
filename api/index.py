@@ -14,66 +14,53 @@ import json
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-etherscan_api_key = os.getenv("ETHERSCAN_API_KEY")
-env = os.environ.copy()
-env["ETHERSCAN_API_KEY"] = etherscan_api_key
-env["XDG_CACHE_HOME"] = '/tmp'
 
+def load_env():
+    etherscan_api_key = os.getenv("ETHERSCAN_API_KEY")
+    env = os.environ.copy()
+    env["ETHERSCAN_API_KEY"] = etherscan_api_key
+    env["XDG_CACHE_HOME"] = '/tmp'
+    load_dotenv()
 
 app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 
 class Message(BaseModel):
     message: str
 
-class AddressProps(BaseModel):
-    address: str
-    chain_id: int
+class Props(BaseModel):
+    abi: str | None = None
+    address: str | None = None
+    chain_id: int | None = None
 
-@app.post("/api/py/generateFromAddress", response_model=InputERC7730Descriptor, responses={400: {"model": Message}})
-def run_erc7730(params: AddressProps):
-    """generate the  'erc7730' based on the contract address"""
-    try:
-        address = params.address
-        chain_id = params.chain_id
-        etherscan_api_key = os.getenv("ETHERSCAN_API_KEY")
-        env = os.environ.copy()
-        env["ETHERSCAN_API_KEY"] = etherscan_api_key
-        env["XDG_CACHE_HOME"] = '/tmp/.cache'
-        load_dotenv()
-
-        result = generate_descriptor(
-            chain_id=chain_id,
-            contract_address=address,
-        )
-        return result
-    except Exception as e:
-        error_message = str(e) 
-
-        return JSONResponse(status_code=404, content={"message": error_message})
-
-class AbiProps(BaseModel):
-    abi: str
-
-@app.post("/api/py/generateFromAbi", responses={400: {"model": Message}})
-def run_erc7730(params: AbiProps):
+@app.post("/api/py/generateERC7730", response_model=InputERC7730Descriptor, responses={400: {"model": Message}})
+def run_erc7730(params: Props):
     """Generate the 'erc7730' based on an ABI."""
-    print('in api', params.abi)
     try:
-        return params.abi
-        # Decode the ABI string into a dictionary
-        abi_dict = json.loads(params.abi)
+        load_env()
+        result = None
 
-        # Save the ABI dictionary to a temporary file
-        abi_file_path = Path("/tmp/abi.json")
-        with abi_file_path.open("w") as abi_file:
-            json.dump(abi_dict, abi_file)
-
-        # Use the file path in your function
-        result = generate_descriptor(
-            abi_file=abi_file_path,
-        )
+        # we only manage ethereum mainnet
+        chain_id = params.chain_id or 1
+        
+        if (params.abi):
+            result = generate_descriptor(
+                chain_id=chain_id,
+                contract_address='0xdeadbeef00000000000000000000000000000000', # because it's mandatory mock address see with laurent
+                abi=params.abi
+            )
+       
+        if (params.address):
+            result = generate_descriptor(
+                chain_id=chain_id,
+                contract_address=params.address
+            )
+            
+        if result is None:
+            return JSONResponse(status_code=404, content={"message": "No ABI or address provided"})
+        
         return result
 
     except Exception as e:
+        print('error', e)
         error_message = str(e)
         return JSONResponse(status_code=404, content={"message": error_message})

@@ -4,27 +4,7 @@
  */
 
 export interface paths {
-    "/api/py/generateFromAddress": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Run Erc7730
-         * @description generate the  'erc7730' based on the contract address
-         */
-        post: operations["run_erc7730_api_py_generateFromAddress_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/py/generateFromAbi": {
+    "/api/py/generateERC7730": {
         parameters: {
             query?: never;
             header?: never;
@@ -37,7 +17,7 @@ export interface paths {
          * Run Erc7730
          * @description Generate the 'erc7730' based on an ABI.
          */
-        post: operations["run_erc7730_api_py_generateFromAbi_post"];
+        post: operations["run_erc7730_api_py_generateERC7730_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -48,24 +28,12 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** AbiProps */
-        AbiProps: {
-            /** Abi */
-            abi: string;
-        };
         /**
          * AddressNameType
          * @description The type of address to display. Restrict allowable sources of names and MAY lead to additional checks from wallets.
          * @enum {string}
          */
         AddressNameType: "wallet" | "eoa" | "contract" | "token" | "collection";
-        /** AddressProps */
-        AddressProps: {
-            /** Address */
-            address: string;
-            /** Chain Id */
-            chain_id: number;
-        };
         /** Component */
         Component: {
             /** Name */
@@ -258,9 +226,14 @@ export interface components {
             selector?: string | null;
             /**
              * Callee Path
-             * @description The path to the address of the contract being called by this embedded calldata.
+             * @description The path to the address of the contract being called by this embedded calldata. Exactly one of "calleePath" or "callee" must be set.
              */
-            calleePath: string;
+            calleePath?: string | null;
+            /**
+             * Callee
+             * @description The address of the contract being called by this embedded calldata, as a constant value. Exactly one of "calleePath" or "callee" must be set.
+             */
+            callee?: string | null;
         };
         /**
          * InputContract
@@ -543,9 +516,14 @@ export interface components {
             params?: (components["schemas"]["InputAddressNameParameters"] | components["schemas"]["InputCallDataParameters"] | components["schemas"]["InputTokenAmountParameters"] | components["schemas"]["InputNftNameParameters"] | components["schemas"]["InputDateParameters"] | components["schemas"]["InputUnitParameters"] | components["schemas"]["InputEnumParameters"]) | null;
             /**
              * Path
-             * @description A path to the field in the structured data. The path is a JSON path expression that can be used to extract the field value from the structured data.
+             * @description A path to the field in the structured data. The path is a JSON path expression that can be used to extract the field value from the structured data. Exactly one of "path" or "value" must be set.
              */
-            path: string;
+            path?: string | null;
+            /**
+             * Value
+             * @description A literal value on which the format should be applied instead of looking up a field in the structured data. Exactly one of "path" or "value" must be set.
+             */
+            value?: string | number | boolean | null;
         };
         /**
          * InputFormat
@@ -637,9 +615,14 @@ export interface components {
         InputNestedFields: {
             /**
              * Path
-             * @description A path to the field in the structured data. The path is a JSON path expression that can be used to extract the field value from the structured data.
+             * @description A path to the field in the structured data. The path is a JSON path expression that can be used to extract the field value from the structured data. Exactly one of "path" or "value" must be set.
              */
-            path: string;
+            path?: string | null;
+            /**
+             * Value
+             * @description A literal value on which the format should be applied instead of looking up a field in the structured data. Exactly one of "path" or "value" must be set.
+             */
+            value?: string | number | boolean | null;
             /**
              * Fields
              * @description Nested fields formats.
@@ -653,9 +636,14 @@ export interface components {
         InputNftNameParameters: {
             /**
              * Collection Path
-             * @description The path to the collection in the structured data.
+             * @description The path to the collection in the structured data. Exactly one of "collectionPath" or "collection" must be set.
              */
-            collectionPath: string;
+            collectionPath?: string | null;
+            /**
+             * Collection
+             * @description The address of the collection contract, as a constant value. Exactly one of "collectionPath" or "collection" must be set.
+             */
+            collection?: string | null;
         };
         /** InputOutput */
         InputOutput: {
@@ -682,9 +670,14 @@ export interface components {
         InputReference: {
             /**
              * Path
-             * @description A path to the field in the structured data. The path is a JSON path expression that can be used to extract the field value from the structured data.
+             * @description A path to the field in the structured data. The path is a JSON path expression that can be used to extract the field value from the structured data. Exactly one of "path" or "value" must be set.
              */
-            path: string;
+            path?: string | null;
+            /**
+             * Value
+             * @description A literal value on which the format should be applied instead of looking up a field in the structured data. Exactly one of "path" or "value" must be set.
+             */
+            value?: string | number | boolean | null;
             /**
              * Internal Definition
              * @description An internal definition that should be used as the field formatting definition. The value is the key in the display definitions section, as a path expression $.display.definitions.DEFINITION_NAME.
@@ -708,9 +701,14 @@ export interface components {
         InputTokenAmountParameters: {
             /**
              * Token Path
-             * @description Path reference to the address of the token contract. Used to associate correct ticker. If ticker is not found or tokenPath is not set, the wallet SHOULD display the raw value instead with an"Unknown token" warning.
+             * @description Path reference to the address of the token contract. Used to associate correct ticker. If ticker is not found or tokenPath is not set, the wallet SHOULD display the raw value instead with an"Unknown token" warning. Exactly one of "tokenPath" or "token" must be set.
              */
             tokenPath?: string | null;
+            /**
+             * Token
+             * @description The address of the token contract, as constant value. Used to associate correct ticker. If ticker is not found or value is not set, the wallet SHOULD display the raw value instead with an "Unknown token" warning. Exactly one of "tokenPath" or "token" must be set.
+             */
+            token?: string | null;
             /**
              * Native Currency Address
              * @description An address or array of addresses, any of which are interpreted as an amount in native currency rather than a token.
@@ -777,6 +775,15 @@ export interface components {
              * @description URL with more info on the entity the user interacts with.
              */
             url: string;
+        };
+        /** Props */
+        Props: {
+            /** Abi */
+            abi?: string | null;
+            /** Address */
+            address?: string | null;
+            /** Chain Id */
+            chain_id?: number | null;
         };
         /** Receive */
         Receive: {
@@ -855,7 +862,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    run_erc7730_api_py_generateFromAddress_post: {
+    run_erc7730_api_py_generateERC7730_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -864,7 +871,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AddressProps"];
+                "application/json": components["schemas"]["Props"];
             };
         };
         responses: {
@@ -875,48 +882,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["InputERC7730Descriptor"];
-                };
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Message"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    run_erc7730_api_py_generateFromAbi_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AbiProps"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
                 };
             };
             /** @description Bad Request */

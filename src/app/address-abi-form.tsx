@@ -12,9 +12,9 @@ import { Button } from "~/components/ui/button";
 
 import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import fetchGenerateFromAddress from "./fetchGenerateFromAddress";
 import { useRouter } from "next/navigation";
 import { useErc7730Store } from "~/store/erc7730Provider";
+import generateFromERC7730 from "./generateFromERC7730";
 
 const CardErc7730 = () => {
   const [input, setInput] = useState("");
@@ -27,24 +27,20 @@ const CardErc7730 = () => {
     isPending: loading,
     error,
   } = useMutation({
-    mutationFn: (address: string) =>
-      fetchGenerateFromAddress({
-        address,
-        chain_id: 1,
+    mutationFn: (input: string) =>
+      generateFromERC7730({
+        input,
+        inputType,
       }),
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const erc7730 = await fetchERC7730Metadata(input);
+    const erc7730 = await fetchERC7730Metadata(input);
 
-      if (erc7730) {
-        setErc7730(erc7730);
-        router.push("/metadata");
-      }
-    } catch (error) {
-      console.error("Error fetching metadata:", error);
+    if (erc7730) {
+      setErc7730(erc7730);
+      router.push("/metadata");
     }
   };
 
