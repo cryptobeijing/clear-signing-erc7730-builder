@@ -65,8 +65,8 @@ const OperationCarousel = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious className="hidden md:flex" />
+        <CarouselNext className="hidden md:flex" />
       </Carousel>
       <div className="mx-auto flex flex-row items-center gap-4 p-2">
         {fullOperationScreens.map((_, index) => (

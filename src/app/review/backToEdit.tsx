@@ -11,7 +11,7 @@ const BackToEdit = () => {
     <Button
       className="w-fit"
       onClick={() => {
-        router.push("/edit");
+        router.push("/operations");
       }}
     >
       <ArrowBigLeft /> Edit
