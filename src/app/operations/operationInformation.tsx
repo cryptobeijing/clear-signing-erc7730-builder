@@ -12,17 +12,15 @@ import { type OperationFormType } from "./editOperation";
 import { Device } from "~/components/devices/device";
 import { TitleScreen } from "~/components/devices/titleScreen";
 import { Card } from "~/components/ui/card";
-import { useErc7730Store } from "~/store/erc7730Provider";
+import { type OperationMetadata } from "~/store/types";
 
 interface Props {
   form: UseFormReturn<OperationFormType>;
-  selectedOperation: string;
+  operationMetadata: OperationMetadata | null;
 }
 
-const OperationInformation = ({ form, selectedOperation }: Props) => {
-  const getOperationsMetadata = useErc7730Store((s) => s.getOperationsMetadata);
-
-  const data = getOperationsMetadata(selectedOperation);
+const OperationInformation = ({ form, operationMetadata }: Props) => {
+  const { intent } = form.watch();
 
   return (
     <div className="grid grid-cols-2 gap-2">
@@ -47,9 +45,9 @@ const OperationInformation = ({ form, selectedOperation }: Props) => {
       <div>
         <Device.Frame>
           <TitleScreen
-            functionName={data?.operationName ?? "{functionName}"}
+            functionName={intent ?? "{functionName}"}
             type={"transaction"}
-            owner={data?.metadata?.owner ?? ""}
+            owner={operationMetadata?.metadata?.owner ?? ""}
           />
           <Device.Pagination current={1} total={1} />
         </Device.Frame>

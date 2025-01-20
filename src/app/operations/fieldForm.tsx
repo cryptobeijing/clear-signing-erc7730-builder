@@ -5,7 +5,6 @@ import { Switch } from "~/components/ui/switch";
 import {
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
   FormDescription,
   FormMessage,
@@ -30,17 +29,17 @@ const FieldForm = ({ field, form, index }: Props) => {
         <div>{field.path}</div>
         <FormField
           control={form.control}
-          name={`field.${index}.isIncluded`}
+          name={`fields.${index}.isIncluded`}
           render={({ field }) => (
             <Switch checked={field.value} onCheckedChange={field.onChange} />
           )}
         />
       </div>
-      <Collapsible open={form.watch(`field.${index}.isIncluded`)}>
+      <Collapsible open={form.watch(`fields.${index}.isIncluded`)}>
         <CollapsibleContent>
           <FormField
             control={form.control}
-            name={`field.${index}.label`}
+            name={`fields.${index}.label`}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
