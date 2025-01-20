@@ -3,6 +3,7 @@ import { BreadcrumbInfo } from "./breadCrumb";
 import OperationCarousel from "./operationCarousel";
 import SelectOperation from "~/shared/selectOperation";
 import BackToEdit from "./backToEdit";
+import ReviewJson from "./reviewJson";
 
 export default async function Home() {
   return (
@@ -12,7 +13,10 @@ export default async function Home() {
           <h1 className="text-2xl font-bold">Review Operations</h1>
           <BreadcrumbInfo />
 
-          <BackToEdit />
+          <div className="flex justify-between">
+            <BackToEdit />
+            <ReviewJson />
+          </div>
 
           <div className="mx-auto py-4">
             <SelectOperation />

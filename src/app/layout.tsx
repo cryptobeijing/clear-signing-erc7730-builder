@@ -5,6 +5,7 @@ import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { Erc7730StoreProvider } from "~/store/erc7730Provider";
+import { Toaster } from "~/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Create Erc7730 Json",
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>
           <Erc7730StoreProvider>{children}</Erc7730StoreProvider>
+          <Toaster />
         </TRPCReactProvider>
       </body>
     </html>
