@@ -20,7 +20,7 @@ const OperationFields = ({ form, operationToEdit }: Props) => {
           <FieldForm key={field.path} field={field} form={form} index={index} />
         ))}
       </div>
-      <OperationScreens operation={operationToEdit} />
+      <OperationScreens operation={operationToEdit} form={form} />
     </div>
   );
 };
