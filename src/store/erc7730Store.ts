@@ -1,5 +1,5 @@
 import { createStore } from "zustand/vanilla";
-import { type Operation, type Erc7730 } from "./types";
+import { type Operation, type OperationMetadata, type Erc7730 } from "./types";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface Erc7730Store {
@@ -9,10 +9,7 @@ export interface Erc7730Store {
   getContractAddress: () => string | null;
   setMetadata: (metadata: Erc7730["metadata"]) => void;
   getOperations: () => Erc7730["display"] | null;
-  getOperationsMetadata: (name: string | null) => {
-    operationName: string;
-    metadata: Erc7730["metadata"] | null;
-  } | null;
+  getOperationsMetadata: (name: string | null) => OperationMetadata | null;
   getOperationsByName: (name: string | null) => Operation | null;
   setOperationData: (name: string, OperationData: Operation) => void;
 }

@@ -35,20 +35,21 @@ const FieldForm = ({ field, form, index }: Props) => {
         <div>{field.path}</div>
         <FormField
           control={form.control}
-          name={`field.${index}.isIncluded`}
+          name={`fields.${index}.isIncluded`}
           render={({ field }) => (
             <Switch checked={field.value} onCheckedChange={field.onChange} />
           )}
         />
       </div>
+
       <Collapsible
-        open={form.watch(`field.${index}.isIncluded`)}
+        open={form.watch(`fields.${index}.isIncluded`)}
         className="px-3"
       >
         <CollapsibleContent>
           <FormField
             control={form.control}
-            name={`field.${index}.label`}
+            name={`fields.${index}.label`}
             render={({ field }) => (
               <FormItem>
                 <FormControl>

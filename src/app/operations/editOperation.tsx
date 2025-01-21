@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useErc7730Store } from "~/store/erc7730Provider";
-import useOperationStore from "~/store/useOperationStore";
 import { z } from "zod";
 import { Form } from "~/components/ui/form";
 import { Button } from "~/components/ui/button";
@@ -14,7 +13,7 @@ const OperationFormSchema = z.object({
   intent: z.string().min(1, {
     message: "Please enter the intent of the operation.",
   }),
-  field: z.array(
+  fields: z.array(
     z.object({
       label: z.string(),
       params: z.union([DateFieldFormSchema, z.object({}).strict()]),
@@ -25,13 +24,19 @@ const OperationFormSchema = z.object({
 
 export type OperationFormType = z.infer<typeof OperationFormSchema>;
 
-const EditOperation = () => {
-  const { selectedOperation } = useOperationStore();
-  const getOperationsByName = useErc7730Store((s) => s.getOperationsByName);
+interface Props {
+  selectedOperation: string;
+}
+const EditOperation = ({ selectedOperation }: Props) => {
+  const operationToEdit = useErc7730Store((s) => s.getOperationsByName)(
+    selectedOperation,
+  );
+  const operationMetadata = useErc7730Store((s) => s.getOperationsMetadata)(
+    selectedOperation,
+  );
+
   const setOperationData = useErc7730Store((s) => s.setOperationData);
   const router = useRouter();
-
-  const operationToEdit = getOperationsByName(selectedOperation ?? "");
 
   const form = useForm<OperationFormType>({
     resolver: zodResolver(OperationFormSchema),
@@ -40,7 +45,7 @@ const EditOperation = () => {
         typeof operationToEdit?.intent === "string"
           ? operationToEdit.intent
           : "",
-      field:
+      fields:
         operationToEdit?.fields?.map((field) => {
           const label = "label" in field ? (field.label ?? "") : "";
           const fieldObject = {
@@ -58,33 +63,20 @@ const EditOperation = () => {
 
   function onSubmit() {
     router.push("/review");
-  }
+    const { intent, fields } = form.getValues();
 
-  form.watch((value) => {
-    if (!operationToEdit) return null;
-
-    const fields = operationToEdit.fields.map((f, index) => {
-      const field = value?.field?.[index];
-
-      return {
-        ...f,
-        ...field,
-      };
-    });
-
-    return setOperationData(selectedOperation, {
-      ...operationToEdit,
-      intent: value.intent,
+    setOperationData(selectedOperation, {
+      intent,
       fields,
     });
-  });
+  }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <OperationInformation
           form={form}
-          selectedOperation={selectedOperation}
+          operationMetadata={operationMetadata}
         />
         <OperationFields form={form} operationToEdit={operationToEdit} />
         <Button type="submit">Submit</Button>

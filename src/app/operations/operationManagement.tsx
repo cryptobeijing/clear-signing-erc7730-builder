@@ -5,6 +5,7 @@ import { useContext, useEffect } from "react";
 import { Erc7730StoreContext, useErc7730Store } from "~/store/erc7730Provider";
 import SelectOperation from "~/shared/selectOperation";
 import EditOperation from "./editOperation";
+import useOperationStore from "~/store/useOperationStore";
 
 const OperationsManagement = () => {
   const router = useRouter();
@@ -12,6 +13,7 @@ const OperationsManagement = () => {
 
   const { getOperations } = useErc7730Store((s) => s);
   const operations = getOperations();
+  const { selectedOperation } = useOperationStore();
 
   useEffect(() => {
     if (hasHydrated && operations === null) {
@@ -26,7 +28,9 @@ const OperationsManagement = () => {
   return (
     <div className="flex flex-col gap-4">
       <SelectOperation />
-      <EditOperation />
+      {selectedOperation && (
+        <EditOperation selectedOperation={selectedOperation} />
+      )}
     </div>
   );
 };

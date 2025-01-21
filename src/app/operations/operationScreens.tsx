@@ -1,14 +1,27 @@
+import { type UseFormReturn } from "react-hook-form";
 import { Device } from "~/components/devices/device";
 import { ReviewScreen } from "~/components/devices/reviewScreen";
 import { getScreensForOperation } from "~/shared/getScreensForOperation";
 import { type Operation } from "~/store/types";
+import { type OperationFormType } from "./editOperation";
 
 interface Props {
   operation: Operation;
+  form: UseFormReturn<OperationFormType>;
 }
 
-const OperationScreens = ({ operation }: Props) => {
-  const screens = getScreensForOperation(operation);
+const OperationScreens = ({ operation, form }: Props) => {
+  const { fields } = form.watch();
+  const screens = getScreensForOperation({
+    ...operation,
+    fields: operation.fields
+      .map((field, index) => ({
+        ...field,
+        ...fields[index],
+      }))
+      .filter((field) => field.isIncluded),
+  });
+
   const totalPages = screens.length + 1;
 
   return (
