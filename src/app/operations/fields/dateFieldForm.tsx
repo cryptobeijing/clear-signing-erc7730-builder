@@ -1,10 +1,9 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,30 +29,6 @@ interface Props {
 }
 
 const DateFieldForm = ({ dateParams, form, index }: Props) => {
-  // console.log("field", field);
-  // const format = field.encoding;
-  // const form = useForm<z.infer<typeof DateFieldFormSchema>>({
-  //   resolver: zodResolver(DateFieldFormSchema),
-  // });
-
-  // function onSubmit(data: z.infer<typeof DateFieldFormSchema>) {
-  //   console.log("data", data);
-  // }
-
-  // return (
-  //   <div>
-  //     Date field format
-  //     <Select value={dateParams.encoding}>
-  //       <SelectTrigger className="w-[180px]">
-  //         <SelectValue placeholder="Date possibles formats" />
-  //       </SelectTrigger>
-  //       <SelectContent>
-
-  //       </SelectContent>
-  //     </Select>
-  //   </div>
-  // );
-
   return (
     <Form {...form}>
       <FormField
@@ -62,6 +37,10 @@ const DateFieldForm = ({ dateParams, form, index }: Props) => {
         render={({ field }) => (
           <FormItem className="mb-1">
             <FormLabel>Date encoding</FormLabel>
+            <FormDescription>
+              Display int as a date, using specified encoding. Date display
+              RECOMMENDED use of RFC 3339
+            </FormDescription>
             <Select
               onValueChange={field.onChange}
               defaultValue={dateParams.encoding}
@@ -76,6 +55,10 @@ const DateFieldForm = ({ dateParams, form, index }: Props) => {
                 <SelectItem value="timestamp">Timestamp</SelectItem>
               </SelectContent>
             </Select>
+            <FormDescription>
+              value is a blockheight and is converted to an approximate unix
+              timestamp
+            </FormDescription>
           </FormItem>
         )}
       />

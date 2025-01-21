@@ -60,8 +60,16 @@ const FieldForm = ({ field, form, index }: Props) => {
             )}
           />
           <Collapsible className="py-3">
-            <CollapsibleTrigger className="flex w-full justify-center transition data-[state='open']:rotate-180">
-              <ChevronsDown className="size-4 text-center text-neutral-300" />
+            <CollapsibleTrigger className="group flex w-full items-center justify-center gap-2 text-neutral-300">
+              <span className="text-sm">
+                <span className="transition group-data-[state='open']:hidden">
+                  show options
+                </span>
+                <span className="transition group-data-[state='closed']:hidden">
+                  hide options
+                </span>
+              </span>
+              <ChevronsDown className="size-4 text-center transition group-data-[state='open']:rotate-180" />
             </CollapsibleTrigger>
             <CollapsibleContent>
               {"format" in field &&
