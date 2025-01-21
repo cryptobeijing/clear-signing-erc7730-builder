@@ -63,7 +63,7 @@ const EditOperation = ({ selectedOperation }: Props) => {
     const { intent, fields } = form.getValues();
 
     setOperationData(selectedOperation, {
-      intent: intent,
+      intent,
       fields,
     });
   }
