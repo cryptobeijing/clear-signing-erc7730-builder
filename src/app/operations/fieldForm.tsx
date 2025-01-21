@@ -5,9 +5,7 @@ import { Switch } from "~/components/ui/switch";
 import {
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
-  FormDescription,
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
@@ -15,7 +13,13 @@ import { type UseFormReturn } from "react-hook-form";
 import { type OperationFormType } from "./editOperation";
 import { type Operation } from "~/store/types";
 
-import { Collapsible, CollapsibleContent } from "~/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/ui/collapsible";
+import { ChevronsDown } from "lucide-react";
+import DateFieldForm from "./fields/dateFieldForm";
 
 interface Props {
   form: UseFormReturn<OperationFormType>;
@@ -24,9 +28,10 @@ interface Props {
 }
 
 const FieldForm = ({ field, form, index }: Props) => {
+  console.log("field", field);
   return (
-    <Card key={field.path} className="p-4">
-      <div className="flex items-center justify-between">
+    <Card key={field.path} className="flex flex-col gap-2">
+      <div className="flex items-center justify-between px-3 py-2">
         <div>{field.path}</div>
         <FormField
           control={form.control}
@@ -36,7 +41,10 @@ const FieldForm = ({ field, form, index }: Props) => {
           )}
         />
       </div>
-      <Collapsible open={form.watch(`field.${index}.isIncluded`)}>
+      <Collapsible
+        open={form.watch(`field.${index}.isIncluded`)}
+        className="px-3"
+      >
         <CollapsibleContent>
           <FormField
             control={form.control}
@@ -46,13 +54,27 @@ const FieldForm = ({ field, form, index }: Props) => {
                 <FormControl>
                   <Input placeholder="" {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is the name of the transaction Operation.
-                </FormDescription>
+
                 <FormMessage />
               </FormItem>
             )}
           />
+          <Collapsible className="py-3">
+            <CollapsibleTrigger className="flex w-full justify-center transition data-[state='open']:rotate-180">
+              <ChevronsDown className="size-4 text-center text-neutral-300" />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              {"format" in field &&
+                field.params &&
+                "encoding" in field.params && (
+                  <DateFieldForm
+                    form={form}
+                    dateParams={field.params}
+                    index={index}
+                  />
+                )}
+            </CollapsibleContent>
+          </Collapsible>
         </CollapsibleContent>
       </Collapsible>
     </Card>

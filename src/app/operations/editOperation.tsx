@@ -8,6 +8,7 @@ import { Button } from "~/components/ui/button";
 import OperationInformation from "./operationInformation";
 import OperationFields from "./operationFields";
 import { useRouter } from "next/navigation";
+import { DateFieldFormSchema } from "./fields/dateFieldForm";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -16,6 +17,7 @@ const OperationFormSchema = z.object({
   field: z.array(
     z.object({
       label: z.string(),
+      params: z.union([DateFieldFormSchema, z.object({}).strict()]),
       isIncluded: z.boolean(),
     }),
   ),
@@ -44,6 +46,7 @@ const EditOperation = () => {
           const fieldObject = {
             ...field,
             label,
+            params: "params" in field ? (field.params ?? {}) : {},
             isIncluded: !!label,
           };
           return fieldObject;
@@ -62,8 +65,6 @@ const EditOperation = () => {
 
     const fields = operationToEdit.fields.map((f, index) => {
       const field = value?.field?.[index];
-
-      if (field?.isIncluded === false) field.label = "";
 
       return {
         ...f,
