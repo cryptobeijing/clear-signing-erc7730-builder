@@ -6,8 +6,8 @@ import { Form } from "~/components/ui/form";
 import { Button } from "~/components/ui/button";
 import OperationInformation from "./operationInformation";
 import OperationFields from "./operationFields";
-import { useRouter } from "next/navigation";
 import { DateFieldFormSchema } from "./fields/dateFieldForm";
+import { useEffect } from "react";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -34,64 +34,45 @@ const EditOperation = ({ selectedOperation }: Props) => {
   const operationValidated = useErc7730Store((s) => s.getFinalOperationByName)(
     selectedOperation,
   );
-  console.log("operationValidated", operationValidated);
   const operationMetadata = useErc7730Store((s) => s.getOperationsMetadata)(
     selectedOperation,
   );
 
   const setOperationData = useErc7730Store((s) => s.setOperationData);
-  const router = useRouter();
 
   const form = useForm<OperationFormType>({
     resolver: zodResolver(OperationFormSchema),
     defaultValues: {
+      intent: "",
+      fields: [],
+    },
+  });
+
+  useEffect(() => {
+    if (!operationToEdit) return;
+    const defaultValues = {
       intent:
-        typeof operationToEdit?.intent === "string"
+        typeof operationToEdit.intent === "string"
           ? operationToEdit.intent
           : "",
       fields:
-        operationToEdit?.fields?.map((field) => {
+        operationToEdit.fields?.map((field) => {
           const label = "label" in field ? (field.label ?? "") : "";
-          // console.log("operationValidated", operationValidated);
-          // console.log("field", field);
           const isIncluded =
             operationValidated === null
               ? true
               : !!operationValidated.fields.find((f) => f.path === field.path);
-          // console.log("useForm setup");
-          const fieldObject = {
+          return {
             ...field,
             label,
             params: "params" in field ? (field.params ?? {}) : {},
             isIncluded,
           };
-          return fieldObject;
         }) ?? [],
-    },
-    // values: {
-    //   intent:
-    //     typeof operationToEdit?.intent === "string"
-    //       ? operationToEdit.intent
-    //       : "",
-    //   fields:
-    //     operationToEdit?.fields?.map((field) => {
-    //       const label = "label" in field ? (field.label ?? "") : "";
-    //       const isIncluded =
-    //         operationValidated === null
-    //           ? true
-    //           : !!operationValidated.fields.find((f) => f.path === field.path);
+    };
 
-    //       console.log("useForm setup");
-    //       const fieldObject = {
-    //         ...field,
-    //         label,
-    //         params: "params" in field ? (field.params ?? {}) : {},
-    //         isIncluded,
-    //       };
-    //       return fieldObject;
-    //     }) ?? [],
-    // },
-  });
+    form.reset(defaultValues);
+  }, [operationToEdit, form, operationValidated]);
 
   if (!selectedOperation) return null;
 
@@ -122,8 +103,8 @@ const EditOperation = ({ selectedOperation }: Props) => {
           operationMetadata={operationMetadata}
         />
         <OperationFields form={form} operationToEdit={operationToEdit} />
-        <Button type="submit" onClick={onSubmit}>
-          Submit
+        <Button type="submit" onClick={onSubmit} className="w-full">
+          Valid operation
         </Button>
       </form>
     </Form>

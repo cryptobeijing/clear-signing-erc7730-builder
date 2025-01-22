@@ -12,6 +12,9 @@ interface Props {
 
 const OperationScreens = ({ operation, form }: Props) => {
   const { fields } = form.watch();
+
+  if (fields.length === 0) return null;
+
   const screens = getScreensForOperation({
     ...operation,
     fields: operation.fields
