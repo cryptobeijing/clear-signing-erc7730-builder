@@ -11,6 +11,7 @@ export interface Erc7730Store {
   setMetadata: (metadata: Erc7730["metadata"]) => void;
   getOperations: () => Erc7730["display"] | null;
   getOperationsMetadata: (name: string | null) => OperationMetadata | null;
+  getFinalOperationsMetadata: (name: string | null) => OperationMetadata | null;
   getOperationsByName: (name: string | null) => Operation | null;
   getFinalOperationByName: (name: string | null) => Operation | null;
   setOperationData: (
@@ -81,6 +82,16 @@ export const createErc7730Store = () => {
           return {
             operationName: typeof intent === "string" ? intent : "",
             metadata: get().generatedErc7730?.metadata ?? null,
+          };
+        },
+        getFinalOperationsMetadata: (name) => {
+          if (!name) return null;
+          const formats = get().finalErc7730?.display?.formats ?? {};
+          const intent = formats[name]?.intent;
+
+          return {
+            operationName: typeof intent === "string" ? intent : "",
+            metadata: get().finalErc7730?.metadata ?? null,
           };
         },
         setMetadata: (metadata) =>
