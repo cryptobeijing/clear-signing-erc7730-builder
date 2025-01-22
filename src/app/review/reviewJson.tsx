@@ -10,7 +10,7 @@ import { useToast } from "~/hooks/use-toast";
 
 export function ReviewJson() {
   const [open, setOpen] = React.useState(false);
-  const erc7730 = useErc7730Store((s) => s.erc7730);
+  const erc7730 = useErc7730Store((s) => s.finalErc7730);
   const { toast } = useToast();
 
   const handleCopyToClipboard = () => {
