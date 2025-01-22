@@ -28,7 +28,6 @@ interface Props {
 }
 
 const FieldForm = ({ field, form, index }: Props) => {
-  console.log("field", field);
   return (
     <Card key={field.path} className="flex flex-col gap-2">
       <div className="flex items-center justify-between px-3 py-2">

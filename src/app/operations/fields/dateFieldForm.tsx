@@ -18,6 +18,15 @@ import {
 import { type components } from "~/generate/api-types";
 import { type OperationFormType } from "../editOperation";
 
+const dateEncoding = [
+  {
+    value: "blockheight",
+    description:
+      "value is a blockheight and is converted to an approximate unix timestamp",
+  },
+  { value: "timestamp", description: "value is encoded as a unix timestamp" },
+];
+
 export const DateFieldFormSchema = z.object({
   encoding: z.enum(["blockheight", "timestamp"]),
 });
@@ -33,7 +42,7 @@ const DateFieldForm = ({ dateParams, form, index }: Props) => {
     <Form {...form}>
       <FormField
         control={form.control}
-        name={`field.${index}.params.encoding`}
+        name={`fields.${index}.params.encoding`}
         render={({ field }) => (
           <FormItem className="mb-1">
             <FormLabel>Date encoding</FormLabel>
@@ -56,13 +65,14 @@ const DateFieldForm = ({ dateParams, form, index }: Props) => {
               </SelectContent>
             </Select>
             <FormDescription>
-              value is a blockheight and is converted to an approximate unix
-              timestamp
+              {
+                dateEncoding.find((item) => item.value === field.value)
+                  ?.description
+              }
             </FormDescription>
           </FormItem>
         )}
       />
-      {/* <Button onClick={form.handleSubmit(onSubmit)}>Submit</Button> */}
     </Form>
   );
 };
