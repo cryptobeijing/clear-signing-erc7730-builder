@@ -31,6 +31,10 @@ const EditOperation = ({ selectedOperation }: Props) => {
   const operationToEdit = useErc7730Store((s) => s.getOperationsByName)(
     selectedOperation,
   );
+  const operationValidated = useErc7730Store((s) => s.getFinalOperationByName)(
+    selectedOperation,
+  );
+  console.log("operationValidated", operationValidated);
   const operationMetadata = useErc7730Store((s) => s.getOperationsMetadata)(
     selectedOperation,
   );
@@ -40,7 +44,7 @@ const EditOperation = ({ selectedOperation }: Props) => {
 
   const form = useForm<OperationFormType>({
     resolver: zodResolver(OperationFormSchema),
-    values: {
+    defaultValues: {
       intent:
         typeof operationToEdit?.intent === "string"
           ? operationToEdit.intent
@@ -48,27 +52,66 @@ const EditOperation = ({ selectedOperation }: Props) => {
       fields:
         operationToEdit?.fields?.map((field) => {
           const label = "label" in field ? (field.label ?? "") : "";
+          // console.log("operationValidated", operationValidated);
+          // console.log("field", field);
+          const isIncluded =
+            operationValidated === null
+              ? true
+              : !!operationValidated.fields.find((f) => f.path === field.path);
+          // console.log("useForm setup");
           const fieldObject = {
             ...field,
             label,
             params: "params" in field ? (field.params ?? {}) : {},
-            isIncluded: !!label,
+            isIncluded,
           };
           return fieldObject;
         }) ?? [],
     },
+    // values: {
+    //   intent:
+    //     typeof operationToEdit?.intent === "string"
+    //       ? operationToEdit.intent
+    //       : "",
+    //   fields:
+    //     operationToEdit?.fields?.map((field) => {
+    //       const label = "label" in field ? (field.label ?? "") : "";
+    //       const isIncluded =
+    //         operationValidated === null
+    //           ? true
+    //           : !!operationValidated.fields.find((f) => f.path === field.path);
+
+    //       console.log("useForm setup");
+    //       const fieldObject = {
+    //         ...field,
+    //         label,
+    //         params: "params" in field ? (field.params ?? {}) : {},
+    //         isIncluded,
+    //       };
+    //       return fieldObject;
+    //     }) ?? [],
+    // },
   });
 
   if (!selectedOperation) return null;
 
   function onSubmit() {
-    router.push("/review");
+    console.log("submit");
     const { intent, fields } = form.getValues();
 
-    setOperationData(selectedOperation, {
-      intent,
-      fields,
-    });
+    console.log(fields);
+    console.log(fields.filter((field) => field.isIncluded));
+    setOperationData(
+      selectedOperation,
+      {
+        intent,
+        fields,
+      },
+      {
+        intent,
+        fields: fields.filter((field) => field.isIncluded),
+      },
+    );
   }
 
   return (
@@ -79,7 +122,9 @@ const EditOperation = ({ selectedOperation }: Props) => {
           operationMetadata={operationMetadata}
         />
         <OperationFields form={form} operationToEdit={operationToEdit} />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" onClick={onSubmit}>
+          Submit
+        </Button>
       </form>
     </Form>
   );

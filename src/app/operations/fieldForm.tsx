@@ -19,7 +19,7 @@ import {
   CollapsibleTrigger,
 } from "~/components/ui/collapsible";
 import { ChevronsDown } from "lucide-react";
-import DateFieldForm from "./fields/dateFieldForm";
+import FieldSelector from "./fields/fieldSelector";
 
 interface Props {
   form: UseFormReturn<OperationFormType>;
@@ -72,15 +72,7 @@ const FieldForm = ({ field, form, index }: Props) => {
               <ChevronsDown className="size-4 text-center transition group-data-[state='open']:rotate-180" />
             </CollapsibleTrigger>
             <CollapsibleContent>
-              {"format" in field &&
-                field.params &&
-                "encoding" in field.params && (
-                  <DateFieldForm
-                    form={form}
-                    dateParams={field.params}
-                    index={index}
-                  />
-                )}
+              <FieldSelector field={field} form={form} index={index} />
             </CollapsibleContent>
           </Collapsible>
         </CollapsibleContent>
