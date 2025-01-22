@@ -77,11 +77,8 @@ const EditOperation = ({ selectedOperation }: Props) => {
   if (!selectedOperation) return null;
 
   function onSubmit() {
-    console.log("submit");
     const { intent, fields } = form.getValues();
 
-    console.log(fields);
-    console.log(fields.filter((field) => field.isIncluded));
     setOperationData(
       selectedOperation,
       {

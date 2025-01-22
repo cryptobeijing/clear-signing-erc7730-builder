@@ -37,7 +37,6 @@ export const createErc7730Store = () => {
           return formats[name] ?? null;
         },
         setOperationData: (name, operationData, filteredOperationData) => {
-          console.log("filteredOperationData", filteredOperationData);
           set((state) => ({
             generatedErc7730: {
               ...state.generatedErc7730!,
@@ -94,9 +93,12 @@ export const createErc7730Store = () => {
               $schema: state.generatedErc7730!.$schema,
               context: state.generatedErc7730!.context,
               metadata,
-              display: {
-                formats: {},
-              },
+              display: state.finalErc7730
+                ? {
+                    ...state.finalErc7730.display,
+                    formats: state.finalErc7730.display.formats ?? {},
+                  }
+                : { formats: {} },
             },
           })),
       }),
