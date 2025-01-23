@@ -8,6 +8,7 @@ import OperationInformation from "./operationInformation";
 import OperationFields from "./operationFields";
 import { DateFieldFormSchema } from "./fields/dateFieldForm";
 import { useEffect } from "react";
+import { TokenAmountFieldFormSchema } from "./fields/tokenAmountFormField";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -16,7 +17,11 @@ const OperationFormSchema = z.object({
   fields: z.array(
     z.object({
       label: z.string(),
-      params: z.union([DateFieldFormSchema, z.object({}).strict()]),
+      params: z.union([
+        DateFieldFormSchema,
+        TokenAmountFieldFormSchema,
+        z.object({}).strict(),
+      ]),
       isIncluded: z.boolean(),
     }),
   ),

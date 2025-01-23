@@ -1,7 +1,7 @@
 const matchFieldFormatToMockData = (format: string) => {
   switch (format) {
     case "raw":
-      return "123";
+      return "1000";
     case "amount":
       return "0.19866144 ETH";
     case "tokenAmount":
