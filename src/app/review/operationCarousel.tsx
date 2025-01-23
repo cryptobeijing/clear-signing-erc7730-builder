@@ -23,7 +23,7 @@ const OperationCarousel = () => {
   const [, setCount] = useState(0);
   const [selected, setSelected] = useState(0);
   const { selectedOperation } = useOperationStore();
-  const operation = useErc7730Store((s) => s.getOperationsByName)(
+  const operation = useErc7730Store((s) => s.getFinalOperationByName)(
     selectedOperation,
   );
 

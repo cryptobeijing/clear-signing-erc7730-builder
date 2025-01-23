@@ -6,7 +6,8 @@ import { Form } from "~/components/ui/form";
 import { Button } from "~/components/ui/button";
 import OperationInformation from "./operationInformation";
 import OperationFields from "./operationFields";
-import { useRouter } from "next/navigation";
+import { DateFieldFormSchema } from "./fields/dateFieldForm";
+import { useEffect } from "react";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -15,6 +16,7 @@ const OperationFormSchema = z.object({
   fields: z.array(
     z.object({
       label: z.string(),
+      params: z.union([DateFieldFormSchema, z.object({}).strict()]),
       isIncluded: z.boolean(),
     }),
   ),
@@ -29,43 +31,65 @@ const EditOperation = ({ selectedOperation }: Props) => {
   const operationToEdit = useErc7730Store((s) => s.getOperationsByName)(
     selectedOperation,
   );
+  const operationValidated = useErc7730Store((s) => s.getFinalOperationByName)(
+    selectedOperation,
+  );
   const operationMetadata = useErc7730Store((s) => s.getOperationsMetadata)(
     selectedOperation,
   );
 
   const setOperationData = useErc7730Store((s) => s.setOperationData);
-  const router = useRouter();
 
   const form = useForm<OperationFormType>({
     resolver: zodResolver(OperationFormSchema),
-    values: {
+    defaultValues: {
+      intent: "",
+      fields: [],
+    },
+  });
+
+  useEffect(() => {
+    if (!operationToEdit) return;
+    const defaultValues = {
       intent:
-        typeof operationToEdit?.intent === "string"
+        typeof operationToEdit.intent === "string"
           ? operationToEdit.intent
           : "",
       fields:
-        operationToEdit?.fields?.map((field) => {
+        operationToEdit.fields?.map((field) => {
           const label = "label" in field ? (field.label ?? "") : "";
-          const fieldObject = {
+          const isIncluded =
+            operationValidated === null
+              ? true
+              : !!operationValidated.fields.find((f) => f.path === field.path);
+          return {
             ...field,
             label,
-            isIncluded: !!label,
+            params: "params" in field ? (field.params ?? {}) : {},
+            isIncluded,
           };
-          return fieldObject;
         }) ?? [],
-    },
-  });
+    };
+
+    form.reset(defaultValues);
+  }, [operationToEdit, form, operationValidated]);
 
   if (!selectedOperation) return null;
 
   function onSubmit() {
-    router.push("/review");
     const { intent, fields } = form.getValues();
 
-    setOperationData(selectedOperation, {
-      intent,
-      fields,
-    });
+    setOperationData(
+      selectedOperation,
+      {
+        intent,
+        fields,
+      },
+      {
+        intent,
+        fields: fields.filter((field) => field.isIncluded),
+      },
+    );
   }
 
   return (
@@ -76,7 +100,9 @@ const EditOperation = ({ selectedOperation }: Props) => {
           operationMetadata={operationMetadata}
         />
         <OperationFields form={form} operationToEdit={operationToEdit} />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" onClick={onSubmit} className="w-full">
+          Valid operation
+        </Button>
       </form>
     </Form>
   );

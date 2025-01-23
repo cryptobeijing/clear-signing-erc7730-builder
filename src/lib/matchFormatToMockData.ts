@@ -9,7 +9,7 @@ const matchFieldFormatToMockData = (format: string) => {
     case "nftName":
       return "CryptoKitty";
     case "date":
-      return "date";
+      return "2024-02-29T08:27:12";
     case "duration":
       return "duration";
     default:

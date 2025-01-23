@@ -3,43 +3,67 @@ import { type Operation, type OperationMetadata, type Erc7730 } from "./types";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface Erc7730Store {
-  erc7730: Erc7730 | null;
+  generatedErc7730: Erc7730 | null;
+  finalErc7730: Erc7730 | null;
   setErc7730: (by: Erc7730) => void;
   getMetadata: () => Erc7730["metadata"] | null;
   getContractAddress: () => string | null;
   setMetadata: (metadata: Erc7730["metadata"]) => void;
   getOperations: () => Erc7730["display"] | null;
   getOperationsMetadata: (name: string | null) => OperationMetadata | null;
+  getFinalOperationsMetadata: (name: string | null) => OperationMetadata | null;
   getOperationsByName: (name: string | null) => Operation | null;
-  setOperationData: (name: string, OperationData: Operation) => void;
+  getFinalOperationByName: (name: string | null) => Operation | null;
+  setOperationData: (
+    name: string,
+    operationData: Operation,
+    filteredOperationData: Operation,
+  ) => void;
 }
 
 export const createErc7730Store = () => {
   return createStore<Erc7730Store>()(
     persist(
       (set, get) => ({
-        erc7730: null,
+        generatedErc7730: null,
+        finalErc7730: null,
         getOperationsByName: (name) => {
           if (!name) return null;
-          const formats = get().erc7730?.display?.formats ?? {};
+          const formats = get().generatedErc7730?.display?.formats ?? {};
           return formats[name] ?? null;
         },
-        setOperationData: (name, OperationData) =>
+        getFinalOperationByName: (name) => {
+          if (!name) return null;
+          const formats = get().finalErc7730?.display?.formats ?? {};
+          return formats[name] ?? null;
+        },
+        setOperationData: (name, operationData, filteredOperationData) => {
           set((state) => ({
-            erc7730: {
-              ...state.erc7730!,
+            generatedErc7730: {
+              ...state.generatedErc7730!,
               display: {
-                ...state.erc7730!.display,
+                ...state.generatedErc7730!.display,
                 formats: {
-                  ...state.erc7730?.display?.formats,
-                  [name]: OperationData,
+                  ...state.generatedErc7730?.display?.formats,
+                  [name]: operationData,
                 },
               },
             },
-          })),
+            finalErc7730: {
+              ...state.finalErc7730!,
+              display: {
+                ...state.finalErc7730!.display,
+                formats: {
+                  ...state.finalErc7730?.display?.formats,
+                  [name]: filteredOperationData,
+                },
+              },
+            },
+          }));
+        },
         getContractAddress: () => {
-          const { erc7730 } = get();
-          const context = erc7730?.context;
+          const { generatedErc7730 } = get();
+          const context = generatedErc7730?.context;
           if (!context) return "";
 
           if ("contract" in context) {
@@ -47,24 +71,45 @@ export const createErc7730Store = () => {
           }
           return "";
         },
-        setErc7730: (erc7730) => set(() => ({ erc7730 })),
-        getOperations: () => get().erc7730?.display ?? null,
-        getMetadata: () => get().erc7730?.metadata ?? null,
+        setErc7730: (generatedErc7730) => set(() => ({ generatedErc7730 })),
+        getOperations: () => get().generatedErc7730?.display ?? null,
+        getMetadata: () => get().generatedErc7730?.metadata ?? null,
         getOperationsMetadata: (name) => {
           if (!name) return null;
-          const formats = get().erc7730?.display?.formats ?? {};
+          const formats = get().generatedErc7730?.display?.formats ?? {};
           const intent = formats[name]?.intent;
 
           return {
             operationName: typeof intent === "string" ? intent : "",
-            metadata: get().erc7730?.metadata ?? null,
+            metadata: get().generatedErc7730?.metadata ?? null,
+          };
+        },
+        getFinalOperationsMetadata: (name) => {
+          if (!name) return null;
+          const formats = get().finalErc7730?.display?.formats ?? {};
+          const intent = formats[name]?.intent;
+
+          return {
+            operationName: typeof intent === "string" ? intent : "",
+            metadata: get().finalErc7730?.metadata ?? null,
           };
         },
         setMetadata: (metadata) =>
           set((state) => ({
-            erc7730: {
-              ...state.erc7730!,
+            generatedErc7730: {
+              ...state.generatedErc7730!,
               metadata,
+            },
+            finalErc7730: {
+              $schema: state.generatedErc7730!.$schema,
+              context: state.generatedErc7730!.context,
+              metadata,
+              display: state.finalErc7730
+                ? {
+                    ...state.finalErc7730.display,
+                    formats: state.finalErc7730.display.formats ?? {},
+                  }
+                : { formats: {} },
             },
           })),
       }),
