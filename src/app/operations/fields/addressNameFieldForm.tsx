@@ -62,11 +62,11 @@ const AddressNameParametersForm = ({ form, index }: Props) => {
             </FormDescription>
             <ToggleGroup
               type="multiple"
-              className="mt-2 flex gap-2"
+              className="mt-2 flex flex-wrap justify-start gap-2"
               value={field.value || []}
               onValueChange={(value) => field.onChange(value)}
             >
-              {addressTypes.map(({ value, description }) => (
+              {addressTypes.map(({ value }) => (
                 <ToggleGroupItem
                   key={value}
                   value={value}

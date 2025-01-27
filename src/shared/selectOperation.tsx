@@ -23,16 +23,16 @@ const SelectOperation = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex w-full flex-col gap-1">
       <Label>Operation to clear sign</Label>
       <Select
         onValueChange={setSelectedOperation}
         value={selectedOperation ?? undefined}
       >
-        <SelectTrigger className="w-full lg:w-[420px]">
+        <SelectTrigger className="w-auto text-ellipsis lg:w-[420px]">
           <SelectValue placeholder="Select a Operation" />
         </SelectTrigger>
-        <SelectContent className="w-full lg:w-auto">
+        <SelectContent className="w-auto">
           <SelectGroup>
             <SelectLabel>Operation</SelectLabel>
             {operation?.formats &&

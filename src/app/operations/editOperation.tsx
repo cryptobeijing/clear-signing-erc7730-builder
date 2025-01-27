@@ -12,6 +12,10 @@ import { TokenAmountFieldFormSchema } from "./fields/tokenAmountFormField";
 import { NftNameParametersFormSchema } from "./fields/nftNameFieldForm";
 import { AddressNameParametersFormSchema } from "./fields/addressNameFieldForm";
 import { UnitParametersFormSchema } from "./fields/unitFieldForm copy";
+import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import ValidOperationButton from "./validOperationButton";
+import ReviewOperationsButton from "./reviewOperationsButton";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -66,6 +70,8 @@ const EditOperation = ({ selectedOperation }: Props) => {
   );
 
   const setOperationData = useErc7730Store((s) => s.setOperationData);
+
+  const router = useRouter();
 
   const form = useForm<OperationFormType>({
     resolver: zodResolver(OperationFormSchema),
@@ -134,9 +140,19 @@ const EditOperation = ({ selectedOperation }: Props) => {
           operationMetadata={operationMetadata}
         />
         <OperationFields form={form} operationToEdit={operationToEdit} />
-        <Button type="submit" onClick={onSubmit} className="w-full">
-          Valid operation
-        </Button>
+        <div className="flex flex-col justify-between gap-4 md:flex-row">
+          {operationToEdit && (
+            <ReviewOperationsButton
+              form={form}
+              operation={operationToEdit}
+              operationMetadata={operationMetadata}
+            />
+          )}
+          <ValidOperationButton onClick={onSubmit} />
+          <Button onClick={() => router.push("/review")}>
+            review <ArrowRight />
+          </Button>
+        </div>
       </form>
     </Form>
   );

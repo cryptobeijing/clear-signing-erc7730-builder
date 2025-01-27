@@ -23,7 +23,7 @@ const OperationInformation = ({ form, operationMetadata }: Props) => {
   const { intent } = form.watch();
 
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
       <Card className="h-fit p-4">
         <FormField
           control={form.control}
@@ -42,7 +42,7 @@ const OperationInformation = ({ form, operationMetadata }: Props) => {
           )}
         />
       </Card>
-      <div>
+      <div className="hidden justify-center md:flex">
         <Device.Frame>
           <TitleScreen
             functionName={intent ?? "{functionName}"}

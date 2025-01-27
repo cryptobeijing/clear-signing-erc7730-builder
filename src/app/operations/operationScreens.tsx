@@ -28,7 +28,7 @@ const OperationScreens = ({ operation, form }: Props) => {
   const totalPages = screens.length + 1;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="hidden flex-col items-center gap-4 md:flex">
       {screens.map((screen, index) => (
         <Device.Frame key={`review-screen-${index}`}>
           <ReviewScreen screen={screen} />
