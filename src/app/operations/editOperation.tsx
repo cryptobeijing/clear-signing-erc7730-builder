@@ -9,6 +9,9 @@ import OperationFields from "./operationFields";
 import { DateFieldFormSchema } from "./fields/dateFieldForm";
 import { useEffect } from "react";
 import { TokenAmountFieldFormSchema } from "./fields/tokenAmountFormField";
+import { NftNameParametersFormSchema } from "./fields/nftNameFieldForm";
+import { AddressNameParametersFormSchema } from "./fields/addressNameFieldForm";
+import { UnitParametersFormSchema } from "./fields/unitFieldForm copy";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -17,9 +20,28 @@ const OperationFormSchema = z.object({
   fields: z.array(
     z.object({
       label: z.string(),
+      format: z.union([
+        z.enum([
+          "raw",
+          "addressName",
+          "calldata",
+          "amount",
+          "tokenAmount",
+          "nftName",
+          "date",
+          "duration",
+          "unit",
+          "enum",
+        ]),
+        z.null(),
+        z.undefined(),
+      ]),
       params: z.union([
         DateFieldFormSchema,
         TokenAmountFieldFormSchema,
+        NftNameParametersFormSchema,
+        AddressNameParametersFormSchema,
+        UnitParametersFormSchema,
         z.object({}).strict(),
       ]),
       isIncluded: z.boolean(),
@@ -70,6 +92,7 @@ const EditOperation = ({ selectedOperation }: Props) => {
           return {
             ...field,
             label,
+            format: "format" in field ? (field.format ?? null) : undefined,
             params: "params" in field ? (field.params ?? {}) : {},
             isIncluded,
           };
@@ -83,6 +106,12 @@ const EditOperation = ({ selectedOperation }: Props) => {
 
   function onSubmit() {
     const { intent, fields } = form.getValues();
+
+    console.log("fields", fields);
+    const cleanFields = fields.map((field) => {
+      // need to delete isIncluded
+      return field;
+    });
 
     setOperationData(
       selectedOperation,

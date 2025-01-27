@@ -15,7 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { type components } from "~/generate/api-types";
 import { type OperationFormType } from "../editOperation";
 
 const dateEncoding = [
@@ -34,10 +33,9 @@ export const DateFieldFormSchema = z.object({
 interface Props {
   form: UseFormReturn<OperationFormType>;
   index: number;
-  dateParams: components["schemas"]["InputDateParameters"];
 }
 
-const DateFieldForm = ({ dateParams, form, index }: Props) => {
+const DateFieldForm = ({ form, index }: Props) => {
   return (
     <Form {...form}>
       <FormField
@@ -52,11 +50,11 @@ const DateFieldForm = ({ dateParams, form, index }: Props) => {
             </FormDescription>
             <Select
               onValueChange={field.onChange}
-              defaultValue={dateParams.encoding}
+              defaultValue={form.watch(`fields.${index}.params.encoding`)}
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a verified email to display" />
+                  <SelectValue placeholder="Select a date encoding" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
