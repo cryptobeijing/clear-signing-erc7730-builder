@@ -18,6 +18,7 @@ import ValidOperationButton from "./validOperationButton";
 import ReviewOperationsButton from "./reviewOperationsButton";
 import { convertOperationToSchema } from "~/lib/convertOperationToSchema";
 import { updateOperationFromSchema } from "~/lib/updateOperationFromSchema";
+import { removeExcludedFields } from "~/lib/removeExcludedFields";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -87,32 +88,11 @@ const EditOperation = ({ selectedOperation }: Props) => {
   useEffect(() => {
     if (!operationToEdit) return;
     const defaultValues = convertOperationToSchema(operationToEdit);
-    // const defaultValues = {
-    //   intent:
-    //     typeof operationToEdit.intent === "string"
-    //       ? operationToEdit.intent
-    //       : "",
-    //   fields:
-    //     operationToEdit.fields?.map((field) => {
-    //       const label = "label" in field ? (field.label ?? "") : "";
-    //       const isIncluded =
-    //         operationValidated === null
-    //           ? true
-    //           : !!operationValidated.fields.find((f) => f.path === field.path);
-    //       return {
-    //         ...field,
-    //         label,
-    //         format: "format" in field ? (field.format ?? null) : undefined,
-    //         params: "params" in field ? (field.params ?? {}) : {},
-    //         isIncluded,
-    //       };
-    //     }) ?? [],
-    // };
 
     console.log("defaultValues", defaultValues);
 
     form.reset(defaultValues);
-  }, [operationToEdit, form, operationValidated]);
+  }, [operationToEdit, form]);
 
   if (!selectedOperation) return null;
 
@@ -127,13 +107,28 @@ const EditOperation = ({ selectedOperation }: Props) => {
       fields,
     });
 
+    console.log("fields", fields);
     console.log("updatedOperation", updatedOperation);
-    setOperationData(selectedOperation, updatedOperation, updatedOperation);
+    console.log(
+      "removeExcludedFields(updatedOperation)",
+      removeExcludedFields(updatedOperation),
+    );
+
+    setOperationData(
+      selectedOperation,
+      updatedOperation,
+      removeExcludedFields(updatedOperation),
+    );
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault(); // Prevents default form reload
+        }}
+        className="space-y-8"
+      >
         <OperationInformation
           form={form}
           operationMetadata={operationMetadata}
@@ -147,7 +142,7 @@ const EditOperation = ({ selectedOperation }: Props) => {
               operationMetadata={operationMetadata}
             />
           )}
-          <ValidOperationButton onClick={onSubmit} />
+          <ValidOperationButton onClick={form.handleSubmit(onSubmit)} />
           <Button onClick={() => router.push("/review")}>
             review <ArrowRight />
           </Button>

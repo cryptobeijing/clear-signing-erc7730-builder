@@ -6,15 +6,18 @@ export function convertOperationToSchema(operation: Operation) {
 
   function traverseFields(fieldsArray: Operation["fields"], parentPath = "") {
     fieldsArray.forEach((field) => {
+      const fullPath = `${parentPath}${field.path}`;
       if ("fields" in field && field.fields.length > 0) {
-        traverseFields(field.fields, `${parentPath}${field.path}`);
+        traverseFields(field.fields, fullPath);
       } else {
         fields.push({
           label: "label" in field ? (field.label ?? "") : "",
           format: "format" in field ? (field.format ?? "raw") : "raw",
           params: "params" in field ? (field.params ?? {}) : {},
-          path: `${parentPath}${field.path}`,
-          isIncluded: true,
+          path: fullPath,
+          isIncluded: operation.excluded
+            ? !operation.excluded.includes(fullPath)
+            : true,
         });
       }
     });
