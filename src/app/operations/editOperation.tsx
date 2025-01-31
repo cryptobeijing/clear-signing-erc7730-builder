@@ -66,9 +66,7 @@ const EditOperation = ({ selectedOperation }: Props) => {
   const operationToEdit = useErc7730Store((s) => s.getOperationsByName)(
     selectedOperation,
   );
-  const operationValidated = useErc7730Store((s) => s.getFinalOperationByName)(
-    selectedOperation,
-  );
+
   const operationMetadata = useErc7730Store((s) => s.getOperationsMetadata)(
     selectedOperation,
   );
@@ -89,8 +87,6 @@ const EditOperation = ({ selectedOperation }: Props) => {
     if (!operationToEdit) return;
     const defaultValues = convertOperationToSchema(operationToEdit);
 
-    console.log("defaultValues", defaultValues);
-
     form.reset(defaultValues);
   }, [operationToEdit, form]);
 
@@ -101,18 +97,10 @@ const EditOperation = ({ selectedOperation }: Props) => {
 
     if (!operationToEdit) return;
 
-    console.log("intent", intent);
     const updatedOperation = updateOperationFromSchema(operationToEdit, {
       intent,
       fields,
     });
-
-    console.log("fields", fields);
-    console.log("updatedOperation", updatedOperation);
-    console.log(
-      "removeExcludedFields(updatedOperation)",
-      removeExcludedFields(updatedOperation),
-    );
 
     setOperationData(
       selectedOperation,
@@ -125,7 +113,7 @@ const EditOperation = ({ selectedOperation }: Props) => {
     <Form {...form}>
       <form
         onSubmit={(e) => {
-          e.preventDefault(); // Prevents default form reload
+          e.preventDefault();
         }}
         className="space-y-8"
       >
