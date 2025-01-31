@@ -4,7 +4,7 @@ import { type Operation } from "~/store/types";
 import { type OperationFormType } from "~/app/operations/editOperation";
 
 describe("updateOperationFromSchema", () => {
-  it("should update the operation based on the updated schema", () => {
+  it("should update the operation based on the updated schema and set excluded paths", () => {
     const operation: Operation = {
       $id: null,
       intent: "exampleIntent",
@@ -107,7 +107,7 @@ describe("updateOperationFromSchema", () => {
             sources: null,
           },
           path: "#._maycPairs.[]mainTokenId",
-          isIncluded: true,
+          isIncluded: false,
         },
         {
           label: "Bakc Token Id",
@@ -206,13 +206,15 @@ describe("updateOperationFromSchema", () => {
         },
       ],
       required: null,
-      excluded: null,
+      excluded: ["#._maycPairs.[]mainTokenId"],
     };
 
     const updatedOperation = updateOperationFromSchema(
       operation,
       updatedSchema,
     );
+
+    console.log("updatedOperation", JSON.stringify(updatedOperation));
 
     expect(updatedOperation).toEqual(expectedUpdatedOperation);
   });

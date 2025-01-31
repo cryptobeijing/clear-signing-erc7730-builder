@@ -6,9 +6,13 @@ export function updateOperationFromSchema(
   updatedSchema: OperationFormType,
 ): Operation {
   const updatedFields = new Map<string, OperationFormType["fields"][number]>();
+  const excludedPaths: string[] = [];
 
   updatedSchema.fields.forEach((field) => {
     updatedFields.set(field.path, field);
+    if (!field.isIncluded) {
+      excludedPaths.push(field.path);
+    }
   });
 
   function traverseAndUpdateFields(
@@ -42,5 +46,6 @@ export function updateOperationFromSchema(
     ...operation,
     intent: updatedSchema.intent,
     fields: operation.fields,
+    excluded: excludedPaths.length > 0 ? excludedPaths : null,
   };
 }
