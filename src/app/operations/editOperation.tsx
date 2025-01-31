@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import ValidOperationButton from "./validOperationButton";
 import ReviewOperationsButton from "./reviewOperationsButton";
 import { convertOperationToSchema } from "~/lib/convertOperationToSchema";
+import { updateOperationFromSchema } from "~/lib/updateOperationFromSchema";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -118,23 +119,16 @@ const EditOperation = ({ selectedOperation }: Props) => {
   function onSubmit() {
     const { intent, fields } = form.getValues();
 
-    console.log("fields", fields);
-    const cleanFields = fields.map((field) => {
-      // need to delete isIncluded
-      return field;
+    if (!operationToEdit) return;
+
+    console.log("intent", intent);
+    const updatedOperation = updateOperationFromSchema(operationToEdit, {
+      intent,
+      fields,
     });
 
-    setOperationData(
-      selectedOperation,
-      {
-        intent,
-        fields,
-      },
-      {
-        intent,
-        fields: fields.filter((field) => field.isIncluded),
-      },
-    );
+    console.log("updatedOperation", updatedOperation);
+    setOperationData(selectedOperation, updatedOperation, updatedOperation);
   }
 
   return (
