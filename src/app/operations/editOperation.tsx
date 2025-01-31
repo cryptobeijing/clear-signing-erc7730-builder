@@ -48,6 +48,7 @@ const OperationFormSchema = z.object({
         UnitParametersFormSchema,
         z.object({}).strict(),
       ]),
+      path: z.string(),
       isIncluded: z.boolean(),
     }),
   ),
