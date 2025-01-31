@@ -23,7 +23,7 @@ export function convertOperationToSchema(operation: Operation) {
   traverseFields(operation.fields);
 
   return {
-    intent: operation.intent ?? "",
+    intent: typeof operation.intent === "string" ? operation.intent : "",
     fields,
   };
 }

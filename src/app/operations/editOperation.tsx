@@ -16,6 +16,7 @@ import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ValidOperationButton from "./validOperationButton";
 import ReviewOperationsButton from "./reviewOperationsButton";
+import { convertOperationToSchema } from "~/lib/convertOperationToSchema";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -84,27 +85,30 @@ const EditOperation = ({ selectedOperation }: Props) => {
 
   useEffect(() => {
     if (!operationToEdit) return;
-    const defaultValues = {
-      intent:
-        typeof operationToEdit.intent === "string"
-          ? operationToEdit.intent
-          : "",
-      fields:
-        operationToEdit.fields?.map((field) => {
-          const label = "label" in field ? (field.label ?? "") : "";
-          const isIncluded =
-            operationValidated === null
-              ? true
-              : !!operationValidated.fields.find((f) => f.path === field.path);
-          return {
-            ...field,
-            label,
-            format: "format" in field ? (field.format ?? null) : undefined,
-            params: "params" in field ? (field.params ?? {}) : {},
-            isIncluded,
-          };
-        }) ?? [],
-    };
+    const defaultValues = convertOperationToSchema(operationToEdit);
+    // const defaultValues = {
+    //   intent:
+    //     typeof operationToEdit.intent === "string"
+    //       ? operationToEdit.intent
+    //       : "",
+    //   fields:
+    //     operationToEdit.fields?.map((field) => {
+    //       const label = "label" in field ? (field.label ?? "") : "";
+    //       const isIncluded =
+    //         operationValidated === null
+    //           ? true
+    //           : !!operationValidated.fields.find((f) => f.path === field.path);
+    //       return {
+    //         ...field,
+    //         label,
+    //         format: "format" in field ? (field.format ?? null) : undefined,
+    //         params: "params" in field ? (field.params ?? {}) : {},
+    //         isIncluded,
+    //       };
+    //     }) ?? [],
+    // };
+
+    console.log("defaultValues", defaultValues);
 
     form.reset(defaultValues);
   }, [operationToEdit, form, operationValidated]);
