@@ -85,8 +85,10 @@ const EditOperation = ({ selectedOperation }: Props) => {
 
   useEffect(() => {
     if (!operationToEdit) return;
+    console.log("operationToEdit", operationToEdit);
     const defaultValues = convertOperationToSchema(operationToEdit);
 
+    console.log("defaultValues", defaultValues);
     form.reset(defaultValues);
   }, [operationToEdit, form]);
 

@@ -1,3 +1,4 @@
+import { type OperationFormType } from "~/app/operations/editOperation";
 import matchFieldFormatToMockData from "~/lib/matchFormatToMockData";
 import { type Operation } from "~/store/types";
 
@@ -35,7 +36,10 @@ export const getScreensForOperation = (operation: Operation) => {
       label,
       displayValue:
         "format" in displayItem
-          ? matchFieldFormatToMockData(displayItem?.format ?? "")
+          ? matchFieldFormatToMockData(
+              displayItem?.format ?? "",
+              displayItem.params,
+            )
           : "displayValue",
     });
 
@@ -44,6 +48,33 @@ export const getScreensForOperation = (operation: Operation) => {
       screen = [];
     }
   }
+
+  return screens;
+};
+
+export const getScreensForForm = (
+  formFields: OperationFormType["fields"],
+): Screen[] => {
+  const screens: Screen[] = [];
+
+  let screen: DisplayItem[] = [];
+
+  formFields.forEach((field, index) => {
+    if (field.isIncluded) {
+      screen.push({
+        label: field.label,
+        displayValue: matchFieldFormatToMockData(
+          field.format ?? "raw",
+          field.params,
+        ),
+      });
+    }
+
+    if (screen.length === ITEM_PER_SCREEN || index === formFields.length - 1) {
+      screens.push(screen);
+      screen = [];
+    }
+  });
 
   return screens;
 };

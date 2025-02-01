@@ -1,4 +1,10 @@
-const matchFieldFormatToMockData = (format: string) => {
+import { OperationFormType } from "~/app/operations/editOperation";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const matchFieldFormatToMockData = (
+  format: OperationFormType["fields"][number]["label"],
+  params: any,
+) => {
   switch (format) {
     case "raw":
       return "1000";

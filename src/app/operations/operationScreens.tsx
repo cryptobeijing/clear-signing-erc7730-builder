@@ -17,13 +17,10 @@ const OperationScreens = ({ operation, form }: Props) => {
 
   const screens = getScreensForOperation({
     ...operation,
-    fields: operation.fields
-      .map((field, index) => ({
-        ...field,
-        ...fields[index],
-      }))
-      .filter((field) => field.isIncluded),
+    fields: fields.filter((field) => field.isIncluded),
   });
+
+  console.log(fields);
 
   const totalPages = screens.length + 1;
 
