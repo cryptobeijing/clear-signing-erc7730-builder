@@ -52,6 +52,7 @@ const OperationFormSchema = z.object({
         z.object({}).strict(),
       ]),
       path: z.string(),
+      isRequired: z.boolean(),
       isIncluded: z.boolean(),
     }),
   ),

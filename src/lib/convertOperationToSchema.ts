@@ -15,6 +15,9 @@ export function convertOperationToSchema(operation: Operation) {
           format: "format" in field ? (field.format ?? "raw") : "raw",
           params: "params" in field ? (field.params ?? {}) : {},
           path: fullPath,
+          isRequired: operation.required
+            ? operation.required.includes(fullPath)
+            : !operation.excluded?.includes(fullPath),
           isIncluded: operation.excluded
             ? !operation.excluded.includes(fullPath)
             : true,

@@ -91,6 +91,7 @@ describe("updateOperationFromSchema", () => {
           params: {},
           path: "#._baycPairs.[]mainTokenId",
           isIncluded: true,
+          isRequired: false,
         },
         {
           label: "Bakc Token Id",
@@ -98,6 +99,7 @@ describe("updateOperationFromSchema", () => {
           params: {},
           path: "#._baycPairs.[]bakcTokenId",
           isIncluded: true,
+          isRequired: false,
         },
         {
           label: "Main Token Id",
@@ -108,6 +110,7 @@ describe("updateOperationFromSchema", () => {
           },
           path: "#._maycPairs.[]mainTokenId",
           isIncluded: false,
+          isRequired: false,
         },
         {
           label: "Bakc Token Id",
@@ -115,6 +118,7 @@ describe("updateOperationFromSchema", () => {
           params: {},
           path: "#._maycPairs.[]bakcTokenId",
           isIncluded: true,
+          isRequired: true,
         },
         {
           label: "Recipient",
@@ -125,6 +129,7 @@ describe("updateOperationFromSchema", () => {
           },
           path: "#._recipient",
           isIncluded: true,
+          isRequired: true,
         },
       ],
     };
@@ -205,7 +210,7 @@ describe("updateOperationFromSchema", () => {
           value: null,
         },
       ],
-      required: null,
+      required: ["#._maycPairs.[]bakcTokenId", "#._recipient"],
       excluded: ["#._maycPairs.[]mainTokenId"],
     };
 

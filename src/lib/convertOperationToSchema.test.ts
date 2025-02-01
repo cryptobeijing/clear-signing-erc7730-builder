@@ -78,7 +78,7 @@ describe("convertOperationToSchema", () => {
             value: null,
           },
         ],
-        required: null,
+        required: ["#._maycPairs.[]mainTokenId"],
         excluded: null,
       },
     };
@@ -91,6 +91,7 @@ describe("convertOperationToSchema", () => {
           format: "raw",
           params: {},
           path: "#._baycPairs.[]mainTokenId",
+          isRequired: false,
           isIncluded: true,
         },
         {
@@ -98,6 +99,7 @@ describe("convertOperationToSchema", () => {
           format: "raw",
           params: {},
           path: "#._baycPairs.[]bakcTokenId",
+          isRequired: false,
           isIncluded: true,
         },
         {
@@ -105,6 +107,7 @@ describe("convertOperationToSchema", () => {
           format: "raw",
           params: {},
           path: "#._maycPairs.[]mainTokenId",
+          isRequired: true,
           isIncluded: true,
         },
         {
@@ -112,6 +115,7 @@ describe("convertOperationToSchema", () => {
           format: "raw",
           params: {},
           path: "#._maycPairs.[]bakcTokenId",
+          isRequired: false,
           isIncluded: true,
         },
         {
@@ -122,6 +126,7 @@ describe("convertOperationToSchema", () => {
             sources: null,
           },
           path: "#._recipient",
+          isRequired: false,
           isIncluded: true,
         },
       ],

@@ -7,11 +7,15 @@ export function updateOperationFromSchema(
 ): Operation {
   const updatedFields = new Map<string, OperationFormType["fields"][number]>();
   const excludedPaths: string[] = [];
+  const requiredPaths: string[] = [];
 
   updatedSchema.fields.forEach((field) => {
     updatedFields.set(field.path, field);
     if (!field.isIncluded) {
       excludedPaths.push(field.path);
+    }
+    if (field.isRequired) {
+      requiredPaths.push(field.path);
     }
   });
 
@@ -42,10 +46,16 @@ export function updateOperationFromSchema(
 
   traverseAndUpdateFields(operation.fields);
 
+  // Filter out any required paths that are also in the excluded paths
+  const filteredRequiredPaths = requiredPaths.filter(
+    (path) => !excludedPaths.includes(path),
+  );
+
   return {
     ...operation,
     intent: updatedSchema.intent,
     fields: operation.fields,
     excluded: excludedPaths.length > 0 ? excludedPaths : null,
+    required: filteredRequiredPaths.length > 0 ? filteredRequiredPaths : null,
   };
 }
