@@ -11,12 +11,13 @@ interface Props {
 }
 
 const OperationFields = ({ form, operationToEdit }: Props) => {
+  const { fields } = form.watch();
   if (!operationToEdit) return null;
 
   return (
     <div className="grid gap-2 md:grid-cols-2">
       <div className="flex flex-col gap-4">
-        {operationToEdit.fields.map((field, index) => (
+        {fields.map((field, index) => (
           <FieldForm key={field.path} field={field} form={form} index={index} />
         ))}
       </div>

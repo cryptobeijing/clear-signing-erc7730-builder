@@ -11,11 +11,14 @@ import { useEffect } from "react";
 import { TokenAmountFieldFormSchema } from "./fields/tokenAmountFormField";
 import { NftNameParametersFormSchema } from "./fields/nftNameFieldForm";
 import { AddressNameParametersFormSchema } from "./fields/addressNameFieldForm";
-import { UnitParametersFormSchema } from "./fields/unitFieldForm copy";
+import { UnitParametersFormSchema } from "./fields/unitFieldForm";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ValidOperationButton from "./validOperationButton";
 import ReviewOperationsButton from "./reviewOperationsButton";
+import { convertOperationToSchema } from "~/lib/convertOperationToSchema";
+import { updateOperationFromSchema } from "~/lib/updateOperationFromSchema";
+import { removeExcludedFields } from "~/lib/removeExcludedFields";
 
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
@@ -48,6 +51,8 @@ const OperationFormSchema = z.object({
         UnitParametersFormSchema,
         z.object({}).strict(),
       ]),
+      path: z.string(),
+      isRequired: z.boolean(),
       isIncluded: z.boolean(),
     }),
   ),
@@ -62,9 +67,7 @@ const EditOperation = ({ selectedOperation }: Props) => {
   const operationToEdit = useErc7730Store((s) => s.getOperationsByName)(
     selectedOperation,
   );
-  const operationValidated = useErc7730Store((s) => s.getFinalOperationByName)(
-    selectedOperation,
-  );
+
   const operationMetadata = useErc7730Store((s) => s.getOperationsMetadata)(
     selectedOperation,
   );
@@ -83,58 +86,40 @@ const EditOperation = ({ selectedOperation }: Props) => {
 
   useEffect(() => {
     if (!operationToEdit) return;
-    const defaultValues = {
-      intent:
-        typeof operationToEdit.intent === "string"
-          ? operationToEdit.intent
-          : "",
-      fields:
-        operationToEdit.fields?.map((field) => {
-          const label = "label" in field ? (field.label ?? "") : "";
-          const isIncluded =
-            operationValidated === null
-              ? true
-              : !!operationValidated.fields.find((f) => f.path === field.path);
-          return {
-            ...field,
-            label,
-            format: "format" in field ? (field.format ?? null) : undefined,
-            params: "params" in field ? (field.params ?? {}) : {},
-            isIncluded,
-          };
-        }) ?? [],
-    };
+    console.log("operationToEdit", operationToEdit);
+    const defaultValues = convertOperationToSchema(operationToEdit);
 
+    console.log("defaultValues", defaultValues);
     form.reset(defaultValues);
-  }, [operationToEdit, form, operationValidated]);
+  }, [operationToEdit, form]);
 
   if (!selectedOperation) return null;
 
   function onSubmit() {
     const { intent, fields } = form.getValues();
 
-    console.log("fields", fields);
-    const cleanFields = fields.map((field) => {
-      // need to delete isIncluded
-      return field;
+    if (!operationToEdit) return;
+
+    const updatedOperation = updateOperationFromSchema(operationToEdit, {
+      intent,
+      fields,
     });
 
     setOperationData(
       selectedOperation,
-      {
-        intent,
-        fields,
-      },
-      {
-        intent,
-        fields: fields.filter((field) => field.isIncluded),
-      },
+      updatedOperation,
+      removeExcludedFields(updatedOperation),
     );
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+        className="space-y-8"
+      >
         <OperationInformation
           form={form}
           operationMetadata={operationMetadata}
@@ -148,7 +133,7 @@ const EditOperation = ({ selectedOperation }: Props) => {
               operationMetadata={operationMetadata}
             />
           )}
-          <ValidOperationButton onClick={onSubmit} />
+          <ValidOperationButton onClick={form.handleSubmit(onSubmit)} />
           <Button onClick={() => router.push("/review")}>
             review <ArrowRight />
           </Button>

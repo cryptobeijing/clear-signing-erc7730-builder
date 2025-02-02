@@ -1,4 +1,4 @@
-import { useContext, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import Image from "next/image";
 import flexInfo from "./assets/flex-info.svg";
 import staxInfo from "./assets/stax-info.svg";

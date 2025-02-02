@@ -20,6 +20,7 @@ import {
 } from "~/components/ui/collapsible";
 import { ChevronsDown } from "lucide-react";
 import FieldSelector from "./fields/fieldSelector";
+import { Toggle } from "~/components/ui/toggle";
 
 interface Props {
   form: UseFormReturn<OperationFormType>;
@@ -32,6 +33,26 @@ const FieldForm = ({ field, form, index }: Props) => {
     <Card key={field.path} className="flex flex-col gap-2">
       <div className="flex items-center justify-between px-3 py-2">
         <div>{field.path}</div>
+        <FormField
+          control={form.control}
+          name={`fields.${index}.isRequired`}
+          render={({ field }) => (
+            <Toggle
+              variant="outline"
+              aria-label="Toggle italic"
+              pressed={field.value}
+              // value={field.value}
+              onPressedChange={() => {
+                console.log("salut");
+                field.onChange(!field.value);
+              }}
+              size="sm"
+              className="data-[state=off]:border-red-200 data-[state=on]:border-green-200"
+            >
+              required {field.value ? "on" : "off"}
+            </Toggle>
+          )}
+        />
         <FormField
           control={form.control}
           name={`fields.${index}.isIncluded`}
