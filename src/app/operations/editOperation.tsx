@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { TokenAmountFieldFormSchema } from "./fields/tokenAmountFormField";
 import { NftNameParametersFormSchema } from "./fields/nftNameFieldForm";
 import { AddressNameParametersFormSchema } from "./fields/addressNameFieldForm";
-import { UnitParametersFormSchema } from "./fields/unitFieldForm copy";
+import { UnitParametersFormSchema } from "./fields/unitFieldForm";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ValidOperationButton from "./validOperationButton";
