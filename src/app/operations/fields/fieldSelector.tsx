@@ -27,7 +27,7 @@ interface Props {
 }
 
 const FieldOption = ({ form, index, field }: Props) => {
-  const format = form.watch(`fields.${index}.format`);
+  const format = form.watch(`fields.${index}.format`) as string;
 
   if (!("format" in field)) return <div>unknown field format</div>;
 
@@ -98,7 +98,7 @@ const FieldSelector = ({ form, index, field }: Props) => {
             <FormLabel className="mt-1">Field format</FormLabel>
             <Select
               onValueChange={field.onChange}
-              defaultValue={field.value ?? undefined}
+              defaultValue={field.value as string | undefined}
             >
               <SelectTrigger className="h-8 w-full text-sm">
                 <SelectValue placeholder="value" />
