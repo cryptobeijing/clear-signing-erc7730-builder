@@ -20,6 +20,18 @@ import { convertOperationToSchema } from "~/lib/convertOperationToSchema";
 import { updateOperationFromSchema } from "~/lib/updateOperationFromSchema";
 import { removeExcludedFields } from "~/lib/removeExcludedFields";
 
+const FieldParams = z.union([
+  DateFieldFormSchema,
+  TokenAmountFieldFormSchema,
+  NftNameParametersFormSchema,
+  AddressNameParametersFormSchema,
+  UnitParametersFormSchema,
+  z.null(),
+  z.object({}).strict(),
+]);
+
+export type ParamsType = z.infer<typeof FieldParams>;
+
 const OperationFormSchema = z.object({
   intent: z.string().min(1, {
     message: "Please enter the intent of the operation.",
@@ -43,14 +55,7 @@ const OperationFormSchema = z.object({
         z.null(),
         z.undefined(),
       ]),
-      params: z.union([
-        DateFieldFormSchema,
-        TokenAmountFieldFormSchema,
-        NftNameParametersFormSchema,
-        AddressNameParametersFormSchema,
-        UnitParametersFormSchema,
-        z.object({}).strict(),
-      ]),
+      params: FieldParams,
       path: z.string(),
       isRequired: z.boolean(),
       isIncluded: z.boolean(),

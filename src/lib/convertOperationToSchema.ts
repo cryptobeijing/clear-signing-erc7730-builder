@@ -13,7 +13,7 @@ export function convertOperationToSchema(operation: Operation) {
         fields.push({
           label: "label" in field ? (field.label ?? "") : "",
           format: "format" in field ? (field.format ?? "raw") : "raw",
-          params: "params" in field ? (field.params ?? {}) : {},
+          params: "params" in field ? (field.params ?? null) : null,
           path: fullPath,
           isRequired: operation.required
             ? operation.required.includes(fullPath)

@@ -18,9 +18,12 @@ export const AddressNameParametersFormSchema = z.object({
   types: z
     .array(z.enum(["wallet", "eoa", "contract", "token", "collection"]))
     .nonempty("At least one address type must be selected."),
-  sources: z
-    .array(z.string().nonempty("Source cannot be empty."))
-    .nonempty("At least one source must be added."),
+  sources: z.union([
+    z
+      .array(z.string().nonempty("Source cannot be empty."))
+      .nonempty("At least one source must be added."),
+    z.null(),
+  ]),
 });
 
 interface Props {
@@ -99,15 +102,15 @@ const AddressNameParametersForm = ({ form, index }: Props) => {
         name={`fields.${index}.params.sources`}
         render={({ field }) => {
           const handleAddSource = () =>
-            field.onChange([...(field.value || []), ""]);
+            field.onChange([...(field.value ?? []), ""]);
           const handleRemoveSource = (index: number) => {
-            const updatedSources = (field.value || []).filter(
+            const updatedSources = (field.value ?? []).filter(
               (_, i) => i !== index,
             );
             field.onChange(updatedSources);
           };
           const handleSourceChange = (value: string, index: number) => {
-            const updatedSources = [...(field.value || [])];
+            const updatedSources = [...(field.value ?? [])];
             updatedSources[index] = value;
             field.onChange(updatedSources);
           };
@@ -120,7 +123,7 @@ const AddressNameParametersForm = ({ form, index }: Props) => {
                 values are local or ens.
               </FormDescription>
               <div className="space-y-2">
-                {(field.value || []).map((source, idx) => (
+                {(field.value ?? []).map((source, idx) => (
                   <div key={idx} className="flex items-center gap-2">
                     <FormControl>
                       <Input

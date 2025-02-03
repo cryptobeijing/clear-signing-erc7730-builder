@@ -89,7 +89,7 @@ describe("convertOperationToSchema", () => {
         {
           label: "Main Token Id",
           format: "raw",
-          params: {},
+          params: null,
           path: "#._baycPairs.[]mainTokenId",
           isRequired: false,
           isIncluded: true,
@@ -97,7 +97,7 @@ describe("convertOperationToSchema", () => {
         {
           label: "Bakc Token Id",
           format: "raw",
-          params: {},
+          params: null,
           path: "#._baycPairs.[]bakcTokenId",
           isRequired: false,
           isIncluded: true,
@@ -105,7 +105,7 @@ describe("convertOperationToSchema", () => {
         {
           label: "Main Token Id",
           format: "raw",
-          params: {},
+          params: null,
           path: "#._maycPairs.[]mainTokenId",
           isRequired: true,
           isIncluded: true,
@@ -113,7 +113,7 @@ describe("convertOperationToSchema", () => {
         {
           label: "Bakc Token Id",
           format: "raw",
-          params: {},
+          params: null,
           path: "#._maycPairs.[]bakcTokenId",
           isRequired: false,
           isIncluded: true,
