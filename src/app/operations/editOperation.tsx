@@ -83,6 +83,7 @@ const EditOperation = ({ selectedOperation }: Props) => {
 
   const form = useForm<OperationFormType>({
     resolver: zodResolver(OperationFormSchema),
+    mode: "onChange",
     defaultValues: {
       intent: "",
       fields: [],
