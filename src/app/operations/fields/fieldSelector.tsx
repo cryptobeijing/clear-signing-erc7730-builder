@@ -67,10 +67,6 @@ const FieldOption = ({ form, index, field }: Props) => {
     return <UnitParametersForm form={form} index={index} />;
   }
 
-  if (format === "enum") {
-    return <div>todo enum</div>;
-  }
-
   return <div>{format}</div>;
 };
 
@@ -84,7 +80,7 @@ const possibleFormats: components["schemas"]["FieldFormat"][] = [
   "date",
   "duration",
   "unit",
-  "enum",
+  // "enum",
 ];
 
 const FieldSelector = ({ form, index, field }: Props) => {
