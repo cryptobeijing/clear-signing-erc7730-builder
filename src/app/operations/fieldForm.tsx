@@ -20,9 +20,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "~/components/ui/collapsible";
-import { CheckCheckIcon, ChevronsDown } from "lucide-react";
+import { ChevronsDown } from "lucide-react";
 import FieldSelector from "./fields/fieldSelector";
-import { Toggle } from "~/components/ui/toggle";
 
 interface Props {
   form: UseFormReturn<OperationFormType>;
