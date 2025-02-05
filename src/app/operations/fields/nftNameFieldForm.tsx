@@ -12,7 +12,6 @@ import { Input } from "~/components/ui/input";
 import { type UseFormReturn } from "react-hook-form";
 import { type OperationFormType } from "../editOperation";
 
-// Define the schema
 export const NftNameParametersFormSchema = z
   .object({
     collection: z.string().optional(),
@@ -30,7 +29,6 @@ interface Props {
 const NftNameParametersForm = ({ form, index }: Props) => {
   return (
     <>
-      <div>WIP</div>
       <Form {...form}>
         <Tabs>
           <TabsList>
