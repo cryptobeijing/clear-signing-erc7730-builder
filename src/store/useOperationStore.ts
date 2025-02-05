@@ -1,23 +1,27 @@
 import { persist, createJSONStorage } from "zustand/middleware";
 import { create } from "zustand";
 
-export interface Erc7730Store {
-  selectedOperation: () => string | null;
-  setSelectedOperation: (f: string) => void;
-}
-
 type State = {
+  validateOperation: string[];
   selectedOperation: string | null;
 };
 
 type Action = {
   setSelectedOperation: (selectedOperation: State["selectedOperation"]) => void;
+  setValidateOperation: (f: string) => void;
 };
 
 export const useOperationStore = create<State & Action>()(
   persist(
     (set) => ({
+      validateOperation: [],
       selectedOperation: null,
+      setValidateOperation: (operation) =>
+        set((state) => ({
+          validateOperation: state.validateOperation.includes(operation)
+            ? state.validateOperation
+            : [...state.validateOperation, operation],
+        })),
       setSelectedOperation: (selectedOperation) =>
         set(() => ({ selectedOperation })),
     }),

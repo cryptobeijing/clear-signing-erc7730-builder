@@ -11,12 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { cn } from "~/lib/utils";
 import { useErc7730Store } from "~/store/erc7730Provider";
 import useOperationStore from "~/store/useOperationStore";
 
 const SelectOperation = () => {
   const operation = useErc7730Store((s) => s.getOperations)();
-  const { selectedOperation, setSelectedOperation } = useOperationStore();
+  const { selectedOperation, setSelectedOperation, validateOperation } =
+    useOperationStore();
 
   useEffect(() => {
     void useOperationStore.persist.rehydrate();
@@ -39,7 +41,14 @@ const SelectOperation = () => {
               Object.entries(operation.formats).map(([operationName]) => (
                 <SelectItem value={operationName} key={operationName}>
                   <div key={operationName}>
-                    <h3>{operationName}</h3>
+                    <h3
+                      className={cn({
+                        "bg-green-200":
+                          validateOperation.includes(operationName),
+                      })}
+                    >
+                      {operationName}
+                    </h3>
                   </div>
                 </SelectItem>
               ))}

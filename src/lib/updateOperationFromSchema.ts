@@ -51,6 +51,14 @@ export function updateOperationFromSchema(
     (path) => !excludedPaths.includes(path),
   );
 
+  console.log("filteredRequiredPaths", {
+    ...operation,
+    intent: updatedSchema.intent,
+    fields: operation.fields,
+    excluded: excludedPaths.length > 0 ? excludedPaths : null,
+    required: filteredRequiredPaths.length > 0 ? filteredRequiredPaths : null,
+  });
+
   return {
     ...operation,
     intent: updatedSchema.intent,
