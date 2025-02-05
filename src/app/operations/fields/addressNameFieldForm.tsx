@@ -18,12 +18,7 @@ export const AddressNameParametersFormSchema = z.object({
   types: z
     .array(z.enum(["wallet", "eoa", "contract", "token", "collection"]))
     .nonempty("At least one address type must be selected."),
-  sources: z.union([
-    z
-      .array(z.string().nonempty("Source cannot be empty."))
-      .nonempty("At least one source must be added."),
-    z.null(),
-  ]),
+  sources: z.array(z.string()),
 });
 
 interface Props {
@@ -49,10 +44,20 @@ const AddressNameParametersForm = ({ form, index }: Props) => {
     },
   ];
 
+  const addressSources = [
+    {
+      value: "local",
+      description:
+        "Address may be replaced with a local name trusted by user. Wallets may consider that local setting for sources is always valid",
+    },
+    {
+      value: "ens",
+      description: "Address may be replaced with an associated ENS domain",
+    },
+  ];
+
   return (
     <Form {...form}>
-      <div>to fix all of this </div>
-      <div>test is connected </div>
       <FormField
         control={form.control}
         name={`fields.${index}.params.types`}
@@ -100,59 +105,43 @@ const AddressNameParametersForm = ({ form, index }: Props) => {
       <FormField
         control={form.control}
         name={`fields.${index}.params.sources`}
-        render={({ field }) => {
-          const handleAddSource = () =>
-            field.onChange([...(field.value ?? []), ""]);
-          const handleRemoveSource = (index: number) => {
-            const updatedSources = (field.value ?? []).filter(
-              (_, i) => i !== index,
-            );
-            field.onChange(updatedSources);
-          };
-          const handleSourceChange = (value: string, index: number) => {
-            const updatedSources = [...(field.value ?? [])];
-            updatedSources[index] = value;
-            field.onChange(updatedSources);
-          };
-
-          return (
-            <FormItem className="mb-4">
-              <FormLabel>Trusted Sources</FormLabel>
-              <FormDescription>
-                Trusted sources for names, in order of preferences. Example
-                values are local or ens.
-              </FormDescription>
-              <div className="space-y-2">
-                {(field.value ?? []).map((source, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <FormControl>
-                      <Input
-                        value={source}
-                        onChange={(e) =>
-                          handleSourceChange(e.target.value, idx)
-                        }
-                        placeholder="Enter a trusted source"
-                      />
-                    </FormControl>
-                    <Button
-                      variant="destructive"
-                      onClick={() => handleRemoveSource(idx)}
-                    >
-                      Remove
-                    </Button>
-                  </div>
+        render={({ field }) => (
+          <FormItem className="mb-4">
+            <FormLabel>Sources</FormLabel>
+            <FormDescription>
+              Sources values are wallet manufacturer specific.
+            </FormDescription>
+            <ToggleGroup
+              type="multiple"
+              className="mt-2 flex flex-wrap justify-start gap-2"
+              value={field.value || []}
+              onValueChange={(value) => field.onChange(value)}
+            >
+              {addressSources.map(({ value }) => (
+                <ToggleGroupItem
+                  key={value}
+                  value={value}
+                  className="px-4 py-2 text-sm"
+                >
+                  {value}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+            {field.value?.length > 0 && (
+              <ul className="mt-2 text-sm text-gray-500">
+                {field.value.map((type) => (
+                  <li key={type}>
+                    <strong>{type}:</strong>{" "}
+                    {
+                      addressSources.find((item) => item.value === type)
+                        ?.description
+                    }
+                  </li>
                 ))}
-              </div>
-              <Button
-                variant="secondary"
-                onClick={handleAddSource}
-                className="mt-2"
-              >
-                Add Source
-              </Button>
-            </FormItem>
-          );
-        }}
+              </ul>
+            )}
+          </FormItem>
+        )}
       />
     </Form>
   );
