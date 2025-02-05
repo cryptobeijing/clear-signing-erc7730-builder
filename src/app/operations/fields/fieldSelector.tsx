@@ -97,7 +97,10 @@ const FieldSelector = ({ form, index, field }: Props) => {
           <FormItem>
             <FormLabel className="mt-1">Field format</FormLabel>
             <Select
-              onValueChange={field.onChange}
+              onValueChange={(value) => {
+                form.setValue(`fields.${index}.params`, null);
+                field.onChange(value);
+              }}
               defaultValue={field.value as string | undefined}
             >
               <SelectTrigger className="h-8 w-full text-sm">
