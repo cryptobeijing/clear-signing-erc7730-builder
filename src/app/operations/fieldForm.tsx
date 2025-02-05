@@ -7,6 +7,8 @@ import {
   FormItem,
   FormControl,
   FormMessage,
+  FormDescription,
+  FormLabel,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { type UseFormReturn } from "react-hook-form";
@@ -18,7 +20,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "~/components/ui/collapsible";
-import { ChevronsDown } from "lucide-react";
+import { CheckCheckIcon, ChevronsDown } from "lucide-react";
 import FieldSelector from "./fields/fieldSelector";
 import { Toggle } from "~/components/ui/toggle";
 
@@ -35,26 +37,6 @@ const FieldForm = ({ field, form, index }: Props) => {
         <div>{field.path}</div>
         <FormField
           control={form.control}
-          name={`fields.${index}.isRequired`}
-          render={({ field }) => (
-            <Toggle
-              variant="outline"
-              aria-label="Toggle italic"
-              pressed={field.value}
-              // value={field.value}
-              onPressedChange={() => {
-                console.log("salut");
-                field.onChange(!field.value);
-              }}
-              size="sm"
-              className="data-[state=off]:border-red-200 data-[state=on]:border-green-200"
-            >
-              required {field.value ? "on" : "off"}
-            </Toggle>
-          )}
-        />
-        <FormField
-          control={form.control}
           name={`fields.${index}.isIncluded`}
           render={({ field }) => (
             <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -66,7 +48,7 @@ const FieldForm = ({ field, form, index }: Props) => {
         open={form.watch(`fields.${index}.isIncluded`)}
         className="px-3"
       >
-        <CollapsibleContent>
+        <CollapsibleContent className="flex flex-col gap-2">
           <FormField
             control={form.control}
             name={`fields.${index}.label`}
@@ -80,6 +62,7 @@ const FieldForm = ({ field, form, index }: Props) => {
               </FormItem>
             )}
           />
+
           <Collapsible className="py-3">
             <CollapsibleTrigger className="group flex w-full items-center justify-center gap-2 text-neutral-300">
               <span className="text-sm">
@@ -93,6 +76,25 @@ const FieldForm = ({ field, form, index }: Props) => {
               <ChevronsDown className="size-4 text-center transition group-data-[state='open']:rotate-180" />
             </CollapsibleTrigger>
             <CollapsibleContent>
+              <FormField
+                control={form.control}
+                name={`fields.${index}.isRequired`}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-2">
+                      <FormLabel>Required</FormLabel>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </div>
+                    <FormDescription>
+                      The required key indicates which parameters wallets SHOULD
+                      display.
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
               <FieldSelector field={field} form={form} index={index} />
             </CollapsibleContent>
           </Collapsible>
