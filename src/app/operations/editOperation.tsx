@@ -138,7 +138,10 @@ const EditOperation = ({ selectedOperation }: Props) => {
               operationMetadata={operationMetadata}
             />
           )}
-          <ValidOperationButton onClick={form.handleSubmit(onSubmit)} />
+          <ValidOperationButton
+            isValid={form.formState.isValid}
+            onClick={form.handleSubmit(onSubmit)}
+          />
           <Button onClick={() => router.push("/review")}>
             review <ArrowRight />
           </Button>

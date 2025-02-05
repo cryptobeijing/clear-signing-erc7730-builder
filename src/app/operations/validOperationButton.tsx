@@ -6,9 +6,10 @@ import useOperationStore from "~/store/useOperationStore";
 
 interface Props {
   onClick: () => void;
+  isValid: boolean;
 }
 
-const ValidOperationButton = ({ onClick }: Props) => {
+const ValidOperationButton = ({ onClick, isValid }: Props) => {
   const [buttonState, setButtonState] = useState<
     "idle" | "validating" | "validated"
   >("idle");
@@ -37,7 +38,7 @@ const ValidOperationButton = ({ onClick }: Props) => {
   };
 
   return (
-    <Button onClick={handleSubmit}>
+    <Button onClick={handleSubmit} disabled={!isValid}>
       {buttonState === "idle" && "Valid operation"}
       {buttonState === "validating" && "Validating..."}
       {buttonState === "validated" && (
