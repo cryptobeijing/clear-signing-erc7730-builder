@@ -11,6 +11,10 @@ const CallDataFieldForm = () => {
         supported by the wallet, it MAY display a hash of the embedded calldata
         instead, with target calleePath resolved to a trusted name if possible.
       </FormDescription>
+      <FormDescription>
+        This feature is in progress if you want to do it you can manually add it
+        to the json
+      </FormDescription>
     </div>
   );
 };
