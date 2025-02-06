@@ -26,7 +26,10 @@ export default async function generateERC7730({
   });
 
   if (!response.ok) {
-    throw new Error(`API Error: ${response.statusText}`);
+    const data = (await response.json()) as {
+      message: string;
+    };
+    throw new Error(`API Error: ${data.message}`);
   }
 
   const data = (await response.json()) as GenerateResponse;
