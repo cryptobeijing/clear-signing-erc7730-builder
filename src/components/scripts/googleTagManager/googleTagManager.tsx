@@ -7,6 +7,7 @@ export interface Props {
 }
 const GoogleTagManager = ({ id }: Props) => {
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     TagManager.initialize({ gtmId: id });
   }, [id]);
   return null;
