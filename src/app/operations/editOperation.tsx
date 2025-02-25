@@ -3,22 +3,23 @@ import { useForm } from "react-hook-form";
 import { useErc7730Store } from "~/store/erc7730Provider";
 import { z } from "zod";
 import { Form } from "~/components/ui/form";
-import { Button } from "~/components/ui/button";
 import OperationInformation from "./operationInformation";
-import OperationFields from "./operationFields";
 import { DateFieldFormSchema } from "./fields/dateFieldForm";
-import { useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { TokenAmountFieldFormSchema } from "./fields/tokenAmountFormField";
 import { NftNameParametersFormSchema } from "./fields/nftNameFieldForm";
 import { AddressNameParametersFormSchema } from "./fields/addressNameFieldForm";
 import { UnitParametersFormSchema } from "./fields/unitFieldForm";
-import { ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ValidOperationButton from "./validOperationButton";
-import ReviewOperationsButton from "./reviewOperationsButton";
 import { convertOperationToSchema } from "~/lib/convertOperationToSchema";
 import { updateOperationFromSchema } from "~/lib/updateOperationFromSchema";
 import { removeExcludedFields } from "~/lib/removeExcludedFields";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import FieldForm from "./fieldForm";
+import { Button } from "~/components/ui/button";
+import useOperationStore from "~/store/useOperationStore";
+import { Divide, Slash } from "lucide-react";
+import { SidebarSeparator } from "~/components/ui/sidebar";
 
 const FieldParams = z.union([
   DateFieldFormSchema,
@@ -78,8 +79,11 @@ const EditOperation = ({ selectedOperation }: Props) => {
   );
 
   const setOperationData = useErc7730Store((s) => s.setOperationData);
+  const saveOperationData = useErc7730Store((s) => s.saveOperationData);
 
-  const router = useRouter();
+  const setUpdatedOperation = useOperationStore(
+    (state) => state.setUpdatedOperation,
+  );
 
   const form = useForm<OperationFormType>({
     resolver: zodResolver(OperationFormSchema),
@@ -90,6 +94,11 @@ const EditOperation = ({ selectedOperation }: Props) => {
     },
   });
 
+  const { watch } = form;
+
+  const formSteps = watch("fields").map((field) => field.path);
+  const [step, setStep] = useState("intent");
+
   useEffect(() => {
     if (!operationToEdit) return;
     console.log("operationToEdit", operationToEdit);
@@ -98,6 +107,34 @@ const EditOperation = ({ selectedOperation }: Props) => {
     console.log("defaultValues", defaultValues);
     form.reset(defaultValues);
   }, [operationToEdit, form]);
+
+  useEffect(() => {
+    setStep("intent");
+  }, [selectedOperation]);
+
+  useEffect(() => {
+    const subscription = watch(() => {
+      const { intent, fields } = form.getValues();
+
+      if (!operationToEdit) return;
+
+      const updatedOperation = updateOperationFromSchema(operationToEdit, {
+        intent,
+        fields,
+      });
+
+      setUpdatedOperation(selectedOperation);
+      saveOperationData(selectedOperation, updatedOperation);
+    });
+    return () => subscription.unsubscribe();
+  }, [
+    form,
+    operationToEdit,
+    saveOperationData,
+    selectedOperation,
+    watch,
+    setUpdatedOperation,
+  ]);
 
   if (!selectedOperation) return null;
 
@@ -119,36 +156,73 @@ const EditOperation = ({ selectedOperation }: Props) => {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-        className="space-y-8"
-      >
-        <OperationInformation
-          form={form}
-          operationMetadata={operationMetadata}
-        />
-        <OperationFields form={form} operationToEdit={operationToEdit} />
-        <div className="flex flex-col justify-between gap-4 md:flex-row">
-          {operationToEdit && (
-            <ReviewOperationsButton
-              form={form}
-              operation={operationToEdit}
-              operationMetadata={operationMetadata}
-            />
-          )}
-          <ValidOperationButton
-            isValid={form.formState.isValid}
-            onClick={form.handleSubmit(onSubmit)}
-          />
-          <Button onClick={() => router.push("/review")}>
-            review <ArrowRight />
-          </Button>
-        </div>
-      </form>
-    </Form>
+    <>
+      <div className="mb-4 flex w-full items-center justify-between">
+        <h1 className="text-2xl font-bold">{selectedOperation}</h1>
+      </div>
+      <Form {...form}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <Tabs
+            defaultValue="tab1"
+            orientation="horizontal"
+            value={step}
+            onValueChange={(value) => setStep(value)}
+          >
+            <TabsList className="flew-row mb-6 flex items-center gap-1">
+              {["intent", ...formSteps].map((step, index) => (
+                <Fragment key={step}>
+                  <TabsTrigger
+                    className="focus:outline-none data-[state=inactive]:text-neutral-300 dark:data-[state=inactive]:text-neutral-500"
+                    value={step}
+                  >
+                    {step}
+                  </TabsTrigger>
+                  {index !== formSteps.length && <Slash className="h-4" />}
+                </Fragment>
+              ))}
+            </TabsList>
+            <SidebarSeparator className="mb-10" />
+
+            <TabsContent value="intent">
+              <OperationInformation
+                form={form}
+                operationMetadata={operationMetadata}
+                onContinue={() => setStep(formSteps[0] ?? "")}
+              />
+            </TabsContent>
+            {form.watch("fields").map((field, index) => (
+              <TabsContent value={field.path} key={field.path}>
+                <FieldForm
+                  field={field}
+                  form={form}
+                  index={index}
+                  operation={operationToEdit}
+                  onPrevious={() =>
+                    index > 0
+                      ? setStep(formSteps[index - 1] ?? "intent")
+                      : setStep("intent")
+                  }
+                  onContinue={
+                    formSteps[index + 1]
+                      ? () => setStep(formSteps[index + 1] ?? "")
+                      : undefined
+                  }
+                  onLast={
+                    formSteps[index + 1]
+                      ? undefined
+                      : form.handleSubmit(onSubmit)
+                  }
+                />
+              </TabsContent>
+            ))}
+          </Tabs>
+        </form>
+      </Form>
+    </>
   );
 };
 

@@ -14,6 +14,7 @@ import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useErc7730Store } from "~/store/erc7730Provider";
+import useFunctionStore from "~/store/useOperationStore";
 import generateFromERC7730 from "./generateFromERC7730";
 
 const CardErc7730 = () => {
@@ -40,6 +41,8 @@ const CardErc7730 = () => {
 
     if (erc7730) {
       console.log(erc7730);
+      useFunctionStore.persist.clearStorage();
+
       setErc7730(erc7730);
       router.push("/metadata");
     }
@@ -54,7 +57,7 @@ const CardErc7730 = () => {
     <div className="w-full lg:w-[580px]">
       <form onSubmit={handleSubmit} className="mb-4 flex w-full flex-col gap-4">
         <Tabs defaultValue="address" onValueChange={onTabChange}>
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="mb-10 grid w-full grid-cols-2">
             <TabsTrigger value="address">Contract Address</TabsTrigger>
             <TabsTrigger value="abi">ABI</TabsTrigger>
           </TabsList>

@@ -22,11 +22,7 @@ export function ReviewJson() {
 
   return (
     <ResponsiveDialog
-      dialogTrigger={
-        <Button variant="outline">
-          <FileJson /> Submit
-        </Button>
-      }
+      dialogTrigger={<Button variant="outline">Submit</Button>}
       dialogTitle="Submit your JSON"
       open={open}
       setOpen={setOpen}
@@ -46,7 +42,7 @@ export function ReviewJson() {
           </a>
           .
         </p>
-        <pre className="max-h-64 overflow-auto rounded border bg-gray-100 p-4 text-sm">
+        <pre className="max-h-64 overflow-auto rounded border bg-gray-100 p-4 text-sm dark:text-black">
           {JSON.stringify(erc7730, null, 2)}
         </pre>
         <Button onClick={handleCopyToClipboard}>Copy JSON to Clipboard</Button>

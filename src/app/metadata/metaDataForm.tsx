@@ -17,24 +17,18 @@ import {
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import Devices from "./devices";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "~/components/ui/drawer";
 import { Erc7730StoreContext, useErc7730Store } from "~/store/erc7730Provider";
+import { Card } from "~/components/ui/card";
 
 const metaDataSchema = z.object({
   owner: z.string().min(1, {
-    message: "Owner is required. Please enter the owner's name.",
+    message: "Contract owner name is required.",
   }),
   url: z.string().min(1, {
-    message: "URL is required. Please enter a valid URL.",
+    message: "URL is required.",
   }),
   legalName: z.string().min(1, {
-    message: "Legal name is required. Please enter the legal name.",
+    message: "Legal name is required.",
   }),
 });
 
@@ -92,85 +86,76 @@ const MetadataForm = () => {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        {metadata && (
-          <div className="hidden flex-row justify-between lg:flex">
-            <Devices metadata={metadata} address={address} />
-          </div>
-        )}
-
-        <FormField
-          control={form.control}
-          name="owner"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Owner</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>Contract owner</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="legalName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Legal Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>Legal Name</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="url"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Url</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>
-                URL with more info on the entity the user interacts with.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex gap-2">
-          <Button type="submit">Submit</Button>
-          {metadata && (
-            <div className="lg:hidden">
-              <Drawer>
-                <DrawerTrigger asChild>
-                  <Button>See on devices</Button>
-                </DrawerTrigger>
-                <DrawerContent className="h-[80%]">
-                  <DrawerHeader>
-                    <DrawerTitle className="sr-only">
-                      ledger devices
-                    </DrawerTitle>
-                  </DrawerHeader>
-                  <div className="overflow-y-auto">
-                    <div className="flex flex-col items-center justify-center gap-2">
-                      <Devices metadata={metadata} address={address} />
+    <>
+      <div className="mb-20 flex w-full items-center justify-between">
+        <h1 className="text-2xl font-bold">Metadata</h1>
+      </div>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid grid-cols-2 gap-10"
+        >
+          <div>
+            <Card className="mb-40 flex h-fit flex-col gap-6 p-6">
+              <FormField
+                control={form.control}
+                name="owner"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contract owner name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="legalName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Legal Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="url"
+                render={({ field }) => (
+                  <FormItem>
+                    <div>
+                      <FormLabel>URL</FormLabel>
+                      <FormDescription>
+                        Where to find information on the entity the user
+                        interacts with.
+                      </FormDescription>
                     </div>
-                  </div>
-                </DrawerContent>
-              </Drawer>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </Card>
+            <div className="flex w-full items-center justify-end">
+              <Button onClick={form.handleSubmit(onSubmit)}>Continue</Button>
+            </div>
+          </div>
+          {metadata && (
+            <div className="hidden flex-row justify-between lg:flex">
+              <Devices metadata={metadata} address={address} />
             </div>
           )}
-        </div>
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </>
   );
 };
 
