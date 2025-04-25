@@ -44,12 +44,20 @@ const MetadataForm = () => {
   const metadata = getMetadata();
   const address = getContractAddress();
 
-  const form = useForm<MetadataFormType>({
-    resolver: zodResolver(metaDataSchema),
+  // Update the schema to include the new field
+  const form = useForm<MetadataFormType & { contractName: string }>({
+    resolver: zodResolver(
+      metaDataSchema.extend({
+        contractName: z.string().min(1, {
+          message: "Smart contract name is required.",
+        }),
+      }),
+    ),
     values: {
       owner: metadata?.owner ?? "",
       url: metadata?.info?.url ?? "",
       legalName: metadata?.info?.legalName ?? "",
+      contractName: metadata?.info?.contractName ?? "",
     },
   });
 
@@ -60,6 +68,7 @@ const MetadataForm = () => {
       info: {
         legalName: value.legalName ?? "",
         url: value.url ?? "",
+        contractName: value.contractName ?? "",
       },
     });
   });
@@ -70,12 +79,13 @@ const MetadataForm = () => {
     }
   }, [metadata, router, hasHydrated, form]);
 
-  const onSubmit = (data: MetadataFormType) => {
+  const onSubmit = (data: MetadataFormType & { contractName: string }) => {
     setMetadata({
       owner: data.owner,
       info: {
         legalName: data.legalName,
         url: data.url,
+        contractName: data.contractName,
       },
     });
     router.push("/operations");
@@ -87,22 +97,23 @@ const MetadataForm = () => {
 
   return (
     <>
-      <div className="mb-20 flex w-full items-center justify-between">
-        <h1 className="text-2xl font-bold">Metadata</h1>
-      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="grid grid-cols-2 gap-10"
         >
           <div>
+            <div className="mb-20 flex w-full items-center justify-between">
+              <h1 className="text-2xl font-bold">Metadata</h1>
+            </div>
+
             <Card className="mb-40 flex h-fit flex-col gap-6 p-6">
               <FormField
                 control={form.control}
                 name="owner"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Contract owner name</FormLabel>
+                    <FormLabel>Contract name</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -138,7 +149,19 @@ const MetadataForm = () => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="contractName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Smart contract name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

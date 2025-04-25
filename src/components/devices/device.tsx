@@ -16,7 +16,7 @@ export const Device = {
       <div
         className={cn(
           "font-semibold",
-          isStax ? "text-[12px] leading-[16px]" : "text-[14px] leading-[18px]",
+          isStax ? "text-[10px] leading-[14px]" : "text-[12px] leading-[16px]",
         )}
       >
         {children}
@@ -30,7 +30,7 @@ export const Device = {
       <div
         className={cn(
           "break-words",
-          isStax ? "text-[12px] leading-[16px]" : "text-[14px] leading-[18px]",
+          isStax ? "text-[10px] leading-[14px]" : "text-[12px] leading-[16px]",
         )}
       >
         {children}
@@ -39,10 +39,10 @@ export const Device = {
   },
   Frame: ({
     children,
-    size = "normal",
+    size = "medium",
   }: {
     children: ReactNode;
-    size?: "small" | "normal";
+    size?: "small" | "medium" | "normal";
   }) => {
     const isStax = false;
     const Component = isStax ? Stax : Flex;
@@ -67,7 +67,7 @@ export const Device = {
       <div
         className={cn(
           "font-medium leading-[20px]",
-          isStax ? "text-[16px]" : "text-[18px]",
+          isStax ? "text-[14px]" : "text-[16px]",
         )}
       >
         {children}
@@ -95,15 +95,15 @@ export const Device = {
               <Image
                 src={staxInfo as string}
                 alt="More info"
-                width={16}
-                height={16}
+                width={14}
+                height={14}
               />
             ) : (
               <Image
                 src={flexInfo as string}
                 alt="More info"
-                width={20}
-                height={20}
+                width={18}
+                height={18}
               />
             )}
           </div>
@@ -161,7 +161,7 @@ export const Device = {
     return (
       <div
         className={cn(
-          "border-light-grey flex flex-col border-b py-[14px] last:border-0",
+          "border-light-grey flex w-[99%] flex-col border-b py-[14px] last:border-0",
           isStax ? "gap-[8px] px-3" : "gap-[6px] px-4",
         )}
       >
@@ -200,7 +200,7 @@ export const Device = {
         <div
           className={cn(
             "border-light-grey flex items-center justify-center rounded-full border",
-            isStax ? "h-[40px] w-[40px]" : "h-[44px] w-[44px]",
+            isStax ? "h-[38px] w-[38px]" : "h-[42px] w-[42px]",
           )}
         >
           <Button />

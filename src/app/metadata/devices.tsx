@@ -11,13 +11,33 @@ interface Props {
 
 const Devices = ({ metadata, address }: Props) => {
   return (
-    <Device.Frame>
-      <MetadataInfoScreen
-        owner={metadata?.owner ?? ""}
-        info={metadata?.info}
-        address={address ?? ""}
-      />
-    </Device.Frame>
+    <div className="flex flex-col gap-16">
+      <div className="flex justify-center">
+        <Device.Frame>
+          <MetadataInfoScreen
+            owner={metadata?.owner ?? ""}
+            info={metadata?.info}
+            address={address ?? ""}
+          />
+        </Device.Frame>
+      </div>
+      <div className="flex justify-center gap-12">
+        <Device.Frame>
+          <MetadataInfoScreen
+            owner={metadata?.owner ?? ""}
+            info={metadata?.info}
+            address={address ?? ""}
+          />
+        </Device.Frame>
+        <Device.Frame>
+          <MetadataInfoScreen
+            owner={metadata?.owner ?? ""}
+            info={metadata?.info}
+            address={address ?? ""}
+          />
+        </Device.Frame>
+      </div>
+    </div>
   );
 };
 

@@ -14,17 +14,19 @@ export const Flex = {
     size,
   }: {
     children: ReactNode;
-    size: "small" | "normal";
+    size: "small" | "medium" | "normal";
   }) => (
     <div
       className={cn(
         "h-[416.5px] w-[301.5px] bg-[url(/assets/DeviceBezel-Flex.png)] bg-contain bg-no-repeat p-[29.5px]",
+        size === "medium" && "h-[312px] w-[226px] p-[22px]",
         size === "small" && "h-[41.6px] w-[30.1px] p-0",
       )}
     >
       <div
         className={cn(
-          "flex h-[300px] w-[240px] overflow-hidden rounded-[8px]",
+          "flex h-[200px] w-[240px] rounded-[8px]",
+          size === "medium" && "h-[100%] w-[100%] rounded-[6px]",
           size === "small" && "flex h-full w-full items-center",
         )}
       >
