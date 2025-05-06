@@ -28,10 +28,6 @@ interface Props {
 }
 
 const TokenAmountFieldForm = ({ form, index }: Props) => {
-  const tokenPathParams = form.watch(
-    `fields.${index}.params`,
-  ) as TokenAmountFieldFormType;
-
   return (
     <Form {...form}>
       <FormField
@@ -47,7 +43,7 @@ const TokenAmountFieldForm = ({ form, index }: Props) => {
             <FormControl>
               <Input
                 {...field}
-                defaultValue={tokenPathParams?.tokenPath}
+                value={field.value ?? ""}
                 placeholder="Enter token path"
               />
             </FormControl>
@@ -68,7 +64,7 @@ const TokenAmountFieldForm = ({ form, index }: Props) => {
             <FormControl>
               <Input
                 {...field}
-                defaultValue={tokenPathParams?.nativeCurrencyAddress}
+                value={field.value ?? ""}
                 placeholder="Enter native currency address(es)"
               />
             </FormControl>
@@ -88,7 +84,7 @@ const TokenAmountFieldForm = ({ form, index }: Props) => {
             <FormControl>
               <Input
                 {...field}
-                defaultValue={tokenPathParams?.threshold}
+                value={field.value ?? ""}
                 placeholder="Enter threshold value"
               />
             </FormControl>
@@ -108,7 +104,7 @@ const TokenAmountFieldForm = ({ form, index }: Props) => {
             <FormControl>
               <Input
                 {...field}
-                defaultValue={tokenPathParams?.message}
+                value={field.value ?? ""}
                 placeholder="Enter custom message"
               />
             </FormControl>

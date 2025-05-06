@@ -38,11 +38,16 @@ const MetadataForm = () => {
   const router = useRouter();
   const hasHydrated = useContext(Erc7730StoreContext)?.persist?.hasHydrated();
 
-  const { getMetadata, setMetadata, getContractAddress } = useErc7730Store(
-    (s) => s,
-  );
+  const {
+    getMetadata,
+    setMetadata,
+    setContractId,
+    getContractAddress,
+    getContractId,
+  } = useErc7730Store((s) => s);
   const metadata = getMetadata();
   const address = getContractAddress();
+  const contractId = getContractId();
 
   // Update the schema to include the new field
   const form = useForm<MetadataFormType & { contractName: string }>({
@@ -57,7 +62,7 @@ const MetadataForm = () => {
       owner: metadata?.owner ?? "",
       url: metadata?.info?.url ?? "",
       legalName: metadata?.info?.legalName ?? "",
-      contractName: metadata?.info?.contractName ?? "",
+      contractName: contractId ?? "",
     },
   });
 
@@ -68,9 +73,9 @@ const MetadataForm = () => {
       info: {
         legalName: value.legalName ?? "",
         url: value.url ?? "",
-        contractName: value.contractName ?? "",
       },
     });
+    setContractId(value.contractName);
   });
 
   useEffect(() => {
@@ -85,9 +90,9 @@ const MetadataForm = () => {
       info: {
         legalName: data.legalName,
         url: data.url,
-        contractName: data.contractName,
       },
     });
+    setContractId(data.contractName);
     router.push("/operations");
   };
 
@@ -113,7 +118,7 @@ const MetadataForm = () => {
                 name="owner"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Contract name</FormLabel>
+                    <FormLabel>Smart contract owner common name</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -173,7 +178,11 @@ const MetadataForm = () => {
           </div>
           {metadata && (
             <div className="hidden flex-row justify-between lg:flex">
-              <Devices metadata={metadata} address={address} />
+              <Devices
+                metadata={metadata}
+                address={address}
+                contractName={contractId}
+              />
             </div>
           )}
         </form>

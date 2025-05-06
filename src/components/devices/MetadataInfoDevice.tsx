@@ -57,10 +57,12 @@ export const MetadataInfoDevice = ({
             {contractName ?? ""}
           </Device.ContentText>
         </Device.Section>
-        <Device.Section>
-          <Device.ActionText>Deployed on</Device.ActionText>
-          <Device.ContentText size="small">{deployedOn}</Device.ContentText>
-        </Device.Section>
+        {deployedOn && ( //to be removed when we have the date
+          <Device.Section>
+            <Device.ActionText>Deployed on</Device.ActionText>
+            <Device.ContentText size="small">{deployedOn}</Device.ContentText>
+          </Device.Section>
+        )}
       </div>
     </>
   );

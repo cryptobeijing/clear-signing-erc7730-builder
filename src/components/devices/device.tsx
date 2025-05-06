@@ -16,21 +16,30 @@ export const Device = {
       <div
         className={cn(
           "font-semibold",
-          isStax ? "text-[10px] leading-[14px]" : "text-[12px] leading-[16px]",
+          isStax ? "text-[10px] leading-[14px]" : "text-[12px] leading-[12px]",
         )}
       >
         {children}
       </div>
     );
   },
-  ContentText: ({ children }: { children: ReactNode }) => {
+  ContentText: ({
+    children,
+    size = "normal",
+  }: {
+    children: ReactNode;
+    size?: "small" | "normal";
+  }) => {
     const isStax = false;
-
+    const smallSizeText =
+      size === "small"
+        ? "text-[11px] leading-[12px]"
+        : "text-[13px] leading-[18px]";
     return (
       <div
         className={cn(
           "break-words",
-          isStax ? "text-[10px] leading-[14px]" : "text-[12px] leading-[16px]",
+          isStax ? "text-[10px] leading-[14px]" : smallSizeText,
         )}
       >
         {children}
@@ -39,7 +48,7 @@ export const Device = {
   },
   Frame: ({
     children,
-    size = "medium",
+    size = "normal",
   }: {
     children: ReactNode;
     size?: "small" | "medium" | "normal";
@@ -67,7 +76,7 @@ export const Device = {
       <div
         className={cn(
           "font-medium leading-[20px]",
-          isStax ? "text-[14px]" : "text-[16px]",
+          isStax ? "text-[14px]" : "text-[18px]",
         )}
       >
         {children}
@@ -90,7 +99,7 @@ export const Device = {
           </Device.ContentText>
         </div>
         <div>
-          <div className="border-light-grey flex h-[32px] w-[32px] items-center justify-center rounded-full border">
+          <div className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-gray-200">
             {isStax ? (
               <Image
                 src={staxInfo as string}
@@ -135,7 +144,7 @@ export const Device = {
     return (
       <div
         className={cn(
-          "align-center border-light-grey flex grow flex-col justify-center gap-3 border-b",
+          "align-center flex grow flex-col justify-center gap-3",
           isStax ? "p-3" : "p-4",
         )}
       >
@@ -146,13 +155,25 @@ export const Device = {
       </div>
     );
   },
-  Pagination: ({ current, total }: { current: number; total: number }) => {
+  Pagination: ({
+    current,
+    total,
+    size,
+  }: {
+    current: number;
+    total: number;
+    size?: "small" | "medium";
+  }) => {
     const isStax = false;
 
     return isStax ? (
-      <Stax.Pagination current={current} total={total} />
+      <Stax.Pagination size={size} current={current} total={total} />
     ) : (
-      <Flex.Pagination current={current} total={total} />
+      <Flex.Pagination
+        size={size ?? undefined}
+        current={current}
+        total={total}
+      />
     );
   },
   Section: ({ children }: { children: ReactNode }) => {
@@ -161,7 +182,7 @@ export const Device = {
     return (
       <div
         className={cn(
-          "border-light-grey flex w-[99%] flex-col border-b py-[14px] last:border-0",
+          "flex w-[99%] flex-col border-b border-gray-200 py-[14px] last:border-0",
           isStax ? "gap-[8px] px-3" : "gap-[6px] px-4",
         )}
       >
@@ -199,7 +220,7 @@ export const Device = {
         <Device.HeadingText>Hold to sign</Device.HeadingText>
         <div
           className={cn(
-            "border-light-grey flex items-center justify-center rounded-full border",
+            "flex items-center justify-center rounded-full border border-gray-200",
             isStax ? "h-[38px] w-[38px]" : "h-[42px] w-[42px]",
           )}
         >

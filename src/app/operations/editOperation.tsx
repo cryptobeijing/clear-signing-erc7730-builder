@@ -10,15 +10,13 @@ import { TokenAmountFieldFormSchema } from "./fields/tokenAmountFormField";
 import { NftNameParametersFormSchema } from "./fields/nftNameFieldForm";
 import { AddressNameParametersFormSchema } from "./fields/addressNameFieldForm";
 import { UnitParametersFormSchema } from "./fields/unitFieldForm";
-import ValidOperationButton from "./validOperationButton";
 import { convertOperationToSchema } from "~/lib/convertOperationToSchema";
 import { updateOperationFromSchema } from "~/lib/updateOperationFromSchema";
 import { removeExcludedFields } from "~/lib/removeExcludedFields";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import FieldForm from "./fieldForm";
-import { Button } from "~/components/ui/button";
 import useOperationStore from "~/store/useOperationStore";
-import { Divide, Slash } from "lucide-react";
+import { Slash } from "lucide-react";
 import { SidebarSeparator } from "~/components/ui/sidebar";
 
 const FieldParams = z.union([
