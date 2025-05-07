@@ -21,7 +21,6 @@ const operationScreens = (
       <TitleScreen
         functionName={metadata?.operationName ?? "{functionName}"}
         type={"transaction"}
-        owner={metadata?.metadata?.owner ?? ""}
       />
       <Device.Pagination current={1} total={totalPages} />
     </>
