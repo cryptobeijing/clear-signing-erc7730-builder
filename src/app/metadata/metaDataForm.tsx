@@ -19,6 +19,7 @@ import { Button } from "~/components/ui/button";
 import Devices from "./devices";
 import { Erc7730StoreContext, useErc7730Store } from "~/store/erc7730Provider";
 import { Card } from "~/components/ui/card";
+import type { Erc7730 } from "~/store/types";
 
 const metaDataSchema = z.object({
   owner: z.string().min(1, {
@@ -50,7 +51,9 @@ const MetadataForm = () => {
   const contractId = getContractId();
 
   // Update the schema to include the new field
-  const form = useForm<MetadataFormType & { contractName: string }>({
+  const form = useForm<
+    MetadataFormType & { contractName: Erc7730["context"]["$id"] }
+  >({
     resolver: zodResolver(
       metaDataSchema.extend({
         contractName: z.string().min(1, {
@@ -84,7 +87,9 @@ const MetadataForm = () => {
     }
   }, [metadata, router, hasHydrated, form]);
 
-  const onSubmit = (data: MetadataFormType & { contractName: string }) => {
+  const onSubmit = (
+    data: MetadataFormType & { contractName: Erc7730["context"]["$id"] },
+  ) => {
     setMetadata({
       owner: data.owner,
       info: {
@@ -120,7 +125,7 @@ const MetadataForm = () => {
                   <FormItem>
                     <FormLabel>Smart contract owner common name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -133,7 +138,7 @@ const MetadataForm = () => {
                   <FormItem>
                     <FormLabel>Legal Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -152,7 +157,7 @@ const MetadataForm = () => {
                       </FormDescription>
                     </div>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -165,7 +170,7 @@ const MetadataForm = () => {
                   <FormItem>
                     <FormLabel>Smart contract name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
