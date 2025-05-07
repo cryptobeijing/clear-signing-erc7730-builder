@@ -48,7 +48,7 @@ const OperationScreens = ({ operation, form, activeFieldPath }: Props) => {
       {screens.map((screen, index) => (
         <Device.Frame key={`review-screen-${index}`}>
           <ReviewScreen screen={screen} />
-          <Device.Pagination current={index - 1 + 2} total={totalPages} />
+          <Device.Pagination current={index + 1} total={totalPages} />
         </Device.Frame>
       ))}
     </div>
