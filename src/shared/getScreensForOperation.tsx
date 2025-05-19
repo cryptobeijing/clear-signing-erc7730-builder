@@ -2,7 +2,9 @@ import { type OperationFormType } from "~/app/operations/editOperation";
 import matchFieldFormatToMockData from "~/lib/matchFormatToMockData";
 import { type Operation } from "~/store/types";
 
-const ITEM_PER_SCREEN = 4;
+//removing 1 item from the screen because it's the static screen added before the form fields
+//this will have 4 items in the screen
+const ITEM_PER_SCREEN = 3;
 export interface DisplayItem {
   label: string;
   isActive?: boolean;

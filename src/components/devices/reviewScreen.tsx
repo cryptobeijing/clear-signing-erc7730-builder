@@ -21,9 +21,11 @@ export const ReviewScreen = ({ screen }: { screen: DisplayItem[] }) => {
             key={`${label}-field-${index}`}
             className={cn("w-full text-black/30", isActive && "text-black")}
           >
-            <Device.ContentText>
-              <span>{label}</span>
-            </Device.ContentText>
+            <div style={{ color: "#959595" }}>
+              <Device.ContentText>
+                <span>{label}</span>
+              </Device.ContentText>
+            </div>
             <div
               className={cn(
                 "column-1 flex w-full items-center justify-between leading-[19px]",
