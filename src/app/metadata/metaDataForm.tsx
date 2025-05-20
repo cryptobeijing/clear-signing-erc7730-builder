@@ -19,6 +19,7 @@ import { Button } from "~/components/ui/button";
 import Devices from "./devices";
 import { Erc7730StoreContext, useErc7730Store } from "~/store/erc7730Provider";
 import { Card } from "~/components/ui/card";
+import type { Erc7730 } from "~/store/types";
 
 const metaDataSchema = z.object({
   owner: z.string().min(1, {
@@ -38,18 +39,33 @@ const MetadataForm = () => {
   const router = useRouter();
   const hasHydrated = useContext(Erc7730StoreContext)?.persist?.hasHydrated();
 
-  const { getMetadata, setMetadata, getContractAddress } = useErc7730Store(
-    (s) => s,
-  );
+  const {
+    getMetadata,
+    setMetadata,
+    setContractId,
+    getContractAddress,
+    getContractId,
+  } = useErc7730Store((s) => s);
   const metadata = getMetadata();
   const address = getContractAddress();
+  const contractId = getContractId();
 
-  const form = useForm<MetadataFormType>({
-    resolver: zodResolver(metaDataSchema),
+  // Update the schema to include the new field
+  const form = useForm<
+    MetadataFormType & { contractName: Erc7730["context"]["$id"] }
+  >({
+    resolver: zodResolver(
+      metaDataSchema.extend({
+        contractName: z.string().min(1, {
+          message: "Smart contract name is required.",
+        }),
+      }),
+    ),
     values: {
       owner: metadata?.owner ?? "",
       url: metadata?.info?.url ?? "",
       legalName: metadata?.info?.legalName ?? "",
+      contractName: contractId ?? "",
     },
   });
 
@@ -62,6 +78,7 @@ const MetadataForm = () => {
         url: value.url ?? "",
       },
     });
+    setContractId(value.contractName);
   });
 
   useEffect(() => {
@@ -70,7 +87,9 @@ const MetadataForm = () => {
     }
   }, [metadata, router, hasHydrated, form]);
 
-  const onSubmit = (data: MetadataFormType) => {
+  const onSubmit = (
+    data: MetadataFormType & { contractName: Erc7730["context"]["$id"] },
+  ) => {
     setMetadata({
       owner: data.owner,
       info: {
@@ -78,6 +97,7 @@ const MetadataForm = () => {
         url: data.url,
       },
     });
+    setContractId(data.contractName);
     router.push("/operations");
   };
 
@@ -87,24 +107,25 @@ const MetadataForm = () => {
 
   return (
     <>
-      <div className="mb-20 flex w-full items-center justify-between">
-        <h1 className="text-2xl font-bold">Metadata</h1>
-      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="grid grid-cols-2 gap-10"
         >
           <div>
+            <div className="mb-20 flex w-full items-center justify-between">
+              <h1 className="text-2xl font-bold">Metadata</h1>
+            </div>
+
             <Card className="mb-40 flex h-fit flex-col gap-6 p-6">
               <FormField
                 control={form.control}
                 name="owner"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Contract owner name</FormLabel>
+                    <FormLabel>Smart contract owner common name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -117,7 +138,7 @@ const MetadataForm = () => {
                   <FormItem>
                     <FormLabel>Legal Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -136,9 +157,21 @@ const MetadataForm = () => {
                       </FormDescription>
                     </div>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} value={field.value ?? ""} />
                     </FormControl>
-
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="contractName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Smart contract name</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value ?? ""} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -150,7 +183,11 @@ const MetadataForm = () => {
           </div>
           {metadata && (
             <div className="hidden flex-row justify-between lg:flex">
-              <Devices metadata={metadata} address={address} />
+              <Devices
+                metadata={metadata}
+                address={address}
+                contractName={contractId}
+              />
             </div>
           )}
         </form>

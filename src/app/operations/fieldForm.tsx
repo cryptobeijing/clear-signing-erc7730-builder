@@ -78,7 +78,14 @@ const FieldLabelInput = ({
       <FormItem>
         <FormLabel>Field Name</FormLabel>
         <FormControl>
-          <Input placeholder="Enter field name" {...field} />
+          <Input
+            placeholder="Enter field name"
+            value={field.value || ""}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
+            name={field.name}
+            ref={field.ref}
+          />
         </FormControl>
         <FormMessage />
       </FormItem>

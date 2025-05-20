@@ -21,11 +21,7 @@ interface Props {
   operationMetadata: OperationMetadata | null;
 }
 
-const ReviewOperationsButton = ({
-  form,
-  operation,
-  operationMetadata,
-}: Props) => {
+const ReviewOperationsButton = ({ form, operation }: Props) => {
   const { fields, intent } = form.watch();
 
   if (fields.length === 0) return null;
@@ -58,7 +54,6 @@ const ReviewOperationsButton = ({
                 <TitleScreen
                   functionName={intent ?? "{functionName}"}
                   type={"transaction"}
-                  owner={operationMetadata?.metadata?.owner ?? ""}
                 />
                 <Device.Pagination current={1} total={1} />
               </Device.Frame>

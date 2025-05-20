@@ -16,21 +16,30 @@ export const Device = {
       <div
         className={cn(
           "font-semibold",
-          isStax ? "text-[12px] leading-[16px]" : "text-[14px] leading-[18px]",
+          isStax ? "text-[10px] leading-[14px]" : "text-[12px] leading-[12px]",
         )}
       >
         {children}
       </div>
     );
   },
-  ContentText: ({ children }: { children: ReactNode }) => {
+  ContentText: ({
+    children,
+    size = "normal",
+  }: {
+    children: ReactNode;
+    size?: "small" | "normal";
+  }) => {
     const isStax = false;
-
+    const smallSizeText =
+      size === "small"
+        ? "text-[11px] leading-[12px]"
+        : "text-[13px] leading-[18px]";
     return (
       <div
         className={cn(
           "break-words",
-          isStax ? "text-[12px] leading-[16px]" : "text-[14px] leading-[18px]",
+          isStax ? "text-[10px] leading-[14px]" : smallSizeText,
         )}
       >
         {children}
@@ -42,7 +51,7 @@ export const Device = {
     size = "normal",
   }: {
     children: ReactNode;
-    size?: "small" | "normal";
+    size?: "small" | "medium" | "normal";
   }) => {
     const isStax = false;
     const Component = isStax ? Stax : Flex;
@@ -67,7 +76,7 @@ export const Device = {
       <div
         className={cn(
           "font-medium leading-[20px]",
-          isStax ? "text-[16px]" : "text-[18px]",
+          isStax ? "text-[14px]" : "text-[18px]",
         )}
       >
         {children}
@@ -90,20 +99,20 @@ export const Device = {
           </Device.ContentText>
         </div>
         <div>
-          <div className="border-light-grey flex h-[32px] w-[32px] items-center justify-center rounded-full border">
+          <div className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-gray-200">
             {isStax ? (
               <Image
                 src={staxInfo as string}
                 alt="More info"
-                width={16}
-                height={16}
+                width={14}
+                height={14}
               />
             ) : (
               <Image
                 src={flexInfo as string}
                 alt="More info"
-                width={20}
-                height={20}
+                width={18}
+                height={18}
               />
             )}
           </div>
@@ -135,7 +144,7 @@ export const Device = {
     return (
       <div
         className={cn(
-          "align-center border-light-grey flex grow flex-col justify-center gap-3 border-b",
+          "align-center flex grow flex-col justify-center gap-3",
           isStax ? "p-3" : "p-4",
         )}
       >
@@ -146,13 +155,25 @@ export const Device = {
       </div>
     );
   },
-  Pagination: ({ current, total }: { current: number; total: number }) => {
+  Pagination: ({
+    current,
+    total,
+    size,
+  }: {
+    current: number;
+    total: number;
+    size?: "small" | "medium";
+  }) => {
     const isStax = false;
 
     return isStax ? (
-      <Stax.Pagination current={current} total={total} />
+      <Stax.Pagination size={size} current={current} total={total} />
     ) : (
-      <Flex.Pagination current={current} total={total} />
+      <Flex.Pagination
+        size={size ?? undefined}
+        current={current}
+        total={total}
+      />
     );
   },
   Section: ({ children }: { children: ReactNode }) => {
@@ -161,7 +182,7 @@ export const Device = {
     return (
       <div
         className={cn(
-          "border-light-grey flex flex-col border-b py-[14px] last:border-0",
+          "flex w-[99%] flex-col border-b border-gray-200 py-[14px] last:border-0",
           isStax ? "gap-[8px] px-3" : "gap-[6px] px-4",
         )}
       >
@@ -199,8 +220,8 @@ export const Device = {
         <Device.HeadingText>Hold to sign</Device.HeadingText>
         <div
           className={cn(
-            "border-light-grey flex items-center justify-center rounded-full border",
-            isStax ? "h-[40px] w-[40px]" : "h-[44px] w-[44px]",
+            "flex items-center justify-center rounded-full border border-gray-200",
+            isStax ? "h-[38px] w-[38px]" : "h-[42px] w-[42px]",
           )}
         >
           <Button />

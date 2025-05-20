@@ -94,10 +94,10 @@ const FieldSelector = ({ form, index, field }: Props) => {
             <FormLabel className="mt-1">Field format</FormLabel>
             <Select
               onValueChange={(value) => {
-                form.setValue(`fields.${index}.params`, null);
+                form.setValue(`fields.${index}.params`, {});
                 field.onChange(value);
               }}
-              defaultValue={field.value as string | undefined}
+              value={field.value as string | undefined}
             >
               <SelectTrigger className="h-8 w-full text-sm">
                 <SelectValue placeholder="value" />

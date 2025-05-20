@@ -21,15 +21,11 @@ interface Props {
   onContinue: () => void;
 }
 
-const OperationInformation = ({
-  form,
-  operationMetadata,
-  onContinue,
-}: Props) => {
+const OperationInformation = ({ form, onContinue }: Props) => {
   const { intent } = form.watch();
 
   return (
-    <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
       <div>
         <Card className="h-fit p-6">
           <FormField
@@ -54,13 +50,18 @@ const OperationInformation = ({
         </Button>
       </div>
       <div className="hidden justify-center md:flex">
-        <Device.Frame>
-          <TitleScreen
-            functionName={intent ?? "{functionName}"}
-            type={"transaction"}
-            owner={operationMetadata?.metadata?.owner ?? ""}
-          />
-          <Device.Pagination current={1} total={1} />
+        <Device.Frame size="normal">
+          <div className="flex h-full w-full flex-col justify-between text-black antialiased">
+            <div className="overflow-hidden break-words px-2 pt-16">
+              <TitleScreen
+                functionName={intent ?? "{functionName}"}
+                type={"transaction"}
+              />
+            </div>
+            <div className="hidden justify-center md:flex">
+              <Device.Pagination current={1} total={1} />
+            </div>
+          </div>
         </Device.Frame>
       </div>
     </div>

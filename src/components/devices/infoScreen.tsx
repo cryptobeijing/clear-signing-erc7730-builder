@@ -17,7 +17,7 @@ export const InfoScreen = ({
 
   return (
     <>
-      <div className="border-light-grey relative border-b">
+      <div className="relative border-b border-gray-200">
         <div
           className={cn(
             "absolute bottom-0 left-0 top-0 flex items-center justify-center",

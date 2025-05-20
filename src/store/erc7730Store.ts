@@ -8,6 +8,8 @@ export interface Erc7730Store {
   setErc7730: (by: Erc7730) => void;
   getMetadata: () => Erc7730["metadata"] | null;
   getContractAddress: () => string | null;
+  getContractId: () => string | null;
+  setContractId: ($id: Erc7730["context"]["$id"]) => void;
   setMetadata: (metadata: Erc7730["metadata"]) => void;
   getOperations: () => Erc7730["display"] | null;
   getOperationsMetadata: (name: string | null) => OperationMetadata | null;
@@ -86,6 +88,16 @@ export const createErc7730Store = () => {
           }
           return "";
         },
+        getContractId: () => {
+          const { generatedErc7730 } = get();
+          const context = generatedErc7730?.context;
+          if (!context) return "";
+
+          if ("$id" in context) {
+            return context.$id ?? "";
+          }
+          return "";
+        },
         setErc7730: (generatedErc7730) => set(() => ({ generatedErc7730 })),
         getOperations: () => get().generatedErc7730?.display ?? null,
         getMetadata: () => get().generatedErc7730?.metadata ?? null,
@@ -109,6 +121,27 @@ export const createErc7730Store = () => {
             metadata: get().finalErc7730?.metadata ?? null,
           };
         },
+        setContractId: ($id) =>
+          set((state) => ({
+            generatedErc7730: {
+              ...state.generatedErc7730!,
+              context: {
+                ...state.generatedErc7730!.context,
+                $id,
+              },
+            },
+            finalErc7730: {
+              $schema: state.generatedErc7730!.$schema,
+              context: { ...state.generatedErc7730!.context, $id },
+              metadata: state.generatedErc7730!.metadata,
+              display: state.finalErc7730
+                ? {
+                    ...state.finalErc7730.display,
+                    formats: state.finalErc7730.display.formats ?? {},
+                  }
+                : { formats: {} },
+            },
+          })),
         setMetadata: (metadata) =>
           set((state) => ({
             generatedErc7730: {
@@ -128,6 +161,7 @@ export const createErc7730Store = () => {
             },
           })),
       }),
+
       {
         storage: createJSONStorage(() => sessionStorage),
         name: "store-erc7730",

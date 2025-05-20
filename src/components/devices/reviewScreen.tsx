@@ -1,6 +1,8 @@
 import { cn } from "~/lib/utils";
 import { Device } from "./device";
 import { type DisplayItem } from "~/shared/getScreensForOperation";
+import Image from "next/image";
+import ChevronIconButtonDisabled from "./assets/chevron-icon-button-disabled.svg";
 
 export const ReviewScreen = ({ screen }: { screen: DisplayItem[] }) => {
   const isStax = true;
@@ -8,7 +10,7 @@ export const ReviewScreen = ({ screen }: { screen: DisplayItem[] }) => {
   return (
     <div
       className={cn(
-        "flex flex-col items-start",
+        "flex flex-col items-start overflow-hidden",
         isStax ? "mt-4 gap-[6px] p-3" : "mt-5 gap-3 px-4",
       )}
     >
@@ -17,12 +19,30 @@ export const ReviewScreen = ({ screen }: { screen: DisplayItem[] }) => {
         .map(({ label, displayValue, isActive }, index) => (
           <div
             key={`${label}-field-${index}`}
-            className={cn("text-black/30", isActive && "text-black")}
+            className={cn("w-full text-black/30", isActive && "text-black")}
           >
-            <Device.ContentText>
-              <span>{label}</span>
-            </Device.ContentText>
-            <Device.HeadingText>{displayValue}</Device.HeadingText>
+            <div style={{ color: "#959595" }}>
+              <Device.ContentText>
+                <span>{label}</span>
+              </Device.ContentText>
+            </div>
+            <div
+              className={cn(
+                "column-1 flex w-full items-center justify-between leading-[19px]",
+              )}
+            >
+              <Device.HeadingText>{displayValue}</Device.HeadingText>
+              {label === "Interaction with" && (
+                <Image
+                  className="w-4.5 inline-block text-gray-400"
+                  src={ChevronIconButtonDisabled as string}
+                  alt="Back"
+                  width={20}
+                  height={20}
+                  color="gray-400"
+                />
+              )}
+            </div>
           </div>
         ))}
     </div>

@@ -16,12 +16,19 @@ export const Stax = {
       </div>
     </div>
   ),
-  Pagination: ({ current, total }: { current: number; total: number }) => {
+  Pagination: ({
+    current,
+    total,
+  }: {
+    current: number;
+    total: number;
+    size?: "small" | "medium";
+  }) => {
     const first = current === 1;
     const last = current === total;
 
     return (
-      <div className="border-light-grey flex border-t">
+      <div className="flex border-t border-gray-200">
         <div className="border-light-grey flex-grow border-r px-[8px] py-[15px] text-center">
           <Device.ActionText>Reject</Device.ActionText>
         </div>
