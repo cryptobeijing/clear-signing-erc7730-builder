@@ -11,7 +11,16 @@ interface FunctionInfo {
 }
 
 interface FunctionAnalyzerProps {
-  jsonData: any;
+  jsonData: {
+    display?: {
+      formats?: Record<string, { intent?: string }>;
+    };
+    metadata?: {
+      info?: {
+        legalName?: string;
+      };
+    };
+  };
 }
 
 export function FunctionAnalyzer({ jsonData }: FunctionAnalyzerProps) {
@@ -23,7 +32,9 @@ export function FunctionAnalyzer({ jsonData }: FunctionAnalyzerProps) {
 
     for (const [signature, data] of Object.entries(formats)) {
       const functionName = signature.split('(')[0];
-      const intent = (data as any).intent || '';
+      if (!functionName) continue; // Skip if no function name found
+      
+      const intent = data.intent ?? '';
       
       // Map function names to available images
       const getImagesForFunction = (name: string): string[] => {
@@ -34,7 +45,7 @@ export function FunctionAnalyzer({ jsonData }: FunctionAnalyzerProps) {
           'burn': ['/img/Burn1.png', '/img/Burn2.png'],
         };
         
-        return imageMap[name.toLowerCase()] || [];
+        return imageMap[name.toLowerCase()] ?? [];
       };
 
       functions.push({
@@ -49,7 +60,7 @@ export function FunctionAnalyzer({ jsonData }: FunctionAnalyzerProps) {
   };
 
   const functions = analyzeFunctions();
-  const legalName = jsonData?.metadata?.info?.legalName || 'Unknown';
+  const legalName = jsonData?.metadata?.info?.legalName ?? 'Unknown';
 
   if (functions.length === 0) {
     return (
@@ -59,7 +70,7 @@ export function FunctionAnalyzer({ jsonData }: FunctionAnalyzerProps) {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
-            No functions detected in the uploaded JSON. Make sure the JSON contains a "display.formats" section with function definitions.
+            No functions detected in the uploaded JSON. Make sure the JSON contains a &quot;display.formats&quot; section with function definitions.
           </p>
         </CardContent>
       </Card>

@@ -4,8 +4,8 @@ import { Device } from "~/components/devices/device";
 import { ReviewScreen } from "~/components/devices/reviewScreen";
 import { TitleScreen } from "~/components/devices/titleScreen";
 import { SignScreen } from "~/components/devices/signScreen";
-import { DisplayItem, type Screen } from "~/shared/getScreensForOperation";
-import { type Erc7730 } from "~/store/types";
+import type { DisplayItem, Screen } from "~/shared/getScreensForOperation";
+import type { Erc7730 } from "~/store/types";
 
 const operationScreens = (
   screens: Screen[],

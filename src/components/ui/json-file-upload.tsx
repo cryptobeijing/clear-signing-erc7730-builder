@@ -4,7 +4,6 @@ import { useState, useRef } from "react";
 import { Button } from "./button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./card";
 import { Label } from "./label";
-import { Textarea } from "./textarea";
 import { FunctionAnalyzer } from "./function-analyzer";
 
 interface JsonFileUploadProps {
@@ -12,11 +11,10 @@ interface JsonFileUploadProps {
 }
 
 export function JsonFileUpload({ onJsonLoad }: JsonFileUploadProps) {
-  const [jsonContent, setJsonContent] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [parsedJson, setParsedJson] = useState<any>(null);
+  const [parsedJson, setParsedJson] = useState<object | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,8 +31,10 @@ export function JsonFileUpload({ onJsonLoad }: JsonFileUploadProps) {
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      const content = e.target?.result as string;
-      handleJsonContent(content);
+      const content = e.target?.result;
+      if (typeof content === 'string') {
+        handleJsonContent(content);
+      }
     };
     reader.onerror = () => {
       setError("Error reading file");
@@ -43,15 +43,13 @@ export function JsonFileUpload({ onJsonLoad }: JsonFileUploadProps) {
   };
 
   const handleJsonContent = (content: string) => {
-    setJsonContent(content);
-    
     try {
-      const parsed = JSON.parse(content);
+      const parsed = JSON.parse(content) as object;
       setError("");
       setIsValid(true);
       setParsedJson(parsed);
       onJsonLoad?.(parsed);
-    } catch (err) {
+    } catch {
       setError("Invalid JSON format");
       setIsValid(false);
       setParsedJson(null);
@@ -63,7 +61,6 @@ export function JsonFileUpload({ onJsonLoad }: JsonFileUploadProps) {
   };
 
   const clearContent = () => {
-    setJsonContent("");
     setFileName("");
     setError("");
     setIsValid(false);
