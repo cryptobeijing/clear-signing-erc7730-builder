@@ -41,6 +41,7 @@ export function FunctionAnalyzer({ jsonData }: FunctionAnalyzerProps) {
         const imageMap: Record<string, string[]> = {
           'approve': ['/img/Approve1.png', '/img/Approve2.png'],
           'mint': ['/img/Mint1.png', '/img/Mint2.png'],
+          'submit': ['/img/Mint1.png', '/img/Mint2.png'],
           'transfer': ['/img/Transfer1.png', '/img/Transfer2.png', '/img/Transfer3.png'],
           'burn': ['/img/Burn1.png', '/img/Burn2.png'],
         };
