@@ -1,0 +1,79 @@
+{
+  "$schema": "../../specs/erc7730-v1.schema.json",
+  "context": {
+    "$id": "rETH",
+    "contract": {
+      "deployments": [{ "chainId": 1, "address": "0xae78736Cd615f374D3085123A210448E74Fc6393" }],
+      "abi": "https://github.com/LedgerHQ/ledger-asset-dapps/blob/211e75ed27de3894f592ca73710fa0b72c3ceeae/ethereum/rocketpool/abis/0xae78736cd615f374d3085123a210448e74fc6393.abi.json"
+    }
+  },
+  "metadata": {
+    "owner": "RocketPool",
+    "info": { "legalName": "RocketPool", "url": "https://rocketpool.net/" },
+    "constants": { "rETHaddress": "0xae78736Cd615f374D3085123A210448E74Fc6393" }
+  },
+  "display": {
+    "formats": {
+      "approve(address,uint256)": {
+        "intent": "authorize rETH spending",
+        "fields": [
+          {
+            "label": "Spender",
+            "format": "addressName",
+            "params": { "types": ["contract"], "sources": ["local"] },
+            "path": "#._spender"
+          },
+          {
+            "label": "Amount",
+            "format": "tokenAmount",
+            "path": "#._amount",
+            "params": { "token": "$.metadata.constants.rETHaddress" }
+          }
+        ],
+        "required": ["#._spender", "#._amount"],
+        "excluded": []
+      },
+      "mint(uint256,address)": {
+        "intent": "stake ETH for rETH",
+        "fields": [
+          { "label": "Amount to stake", "format": "amount", "path": "#._ethAmount" },
+          { "label": "Recipient", "format": "addressName", "path": "#._to" }
+        ],
+        "required": ["#._ethAmount", "#._to"],
+        "excluded": []
+      },
+      "transfer(address,uint256)": {
+        "intent": "transfer rETH",
+        "fields": [
+          {
+            "label": "Recipient",
+            "format": "addressName",
+            "params": { "types": ["eoa", "wallet"], "sources": ["local", "ens"] },
+            "path": "#._recipient"
+          },
+          {
+            "label": "Amount",
+            "format": "tokenAmount",
+            "path": "#._amount",
+            "params": { "token": "$.metadata.constants.rETHaddress" }
+          }
+        ],
+        "required": ["#._recipient", "#._amount"],
+        "excluded": []
+      },
+      "burn(uint256)": {
+        "intent": "burn rETH for ETH",
+        "fields": [
+          {
+            "label": "Amount to burn",
+            "format": "tokenAmount",
+            "path": "#._rethAmount",
+            "params": { "token": "$.metadata.constants.rETHaddress" }
+          }
+        ],
+        "required": ["#._rethAmount"],
+        "excluded": []
+      }
+    }
+  }
+}
